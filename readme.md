@@ -21,15 +21,15 @@ This project is a proof-of-concept for the Digital Twin of SmartLab, built as pa
 
 To ensure modularity, scalability, and maintainability, the project is organized as follows:
 
-- `cic_dt_smartlab/`  
-- `│`  
-- `├── main.py            # Main entry point for running the digital twin.`  
-- `├── config.py          # Configuration settings for the MQTT broker, database, etc.`  
-- `├── Ifc_parser.py      # Parses the IFC model to extract building geometry and sensor locations.`  
-- `├── mqtt_client.py     # Manages MQTT connection, subscriptions, and message handling.`  
-- `├── database.py        # Handles database connections, schema definition, and CRUD operations.`  
-- `├── visualization.py   # Visualizes sensor data and building model in Blender.`  
-- `└── requirements.txt   # List of dependencies (e.g., ifcopenshell, paho-mqtt).`
+   `cic_dt_smartlab/`  
+   `│`  
+   `├── main.py            # Main entry point for running the digital twin.`  
+   `├── config.py          # Configuration settings for the MQTT broker, database, etc.`  
+   `├── Ifc_parser.py      # Parses the IFC model to extract building geometry and sensor locations.`  
+   `├── mqtt_client.py     # Manages MQTT connection, subscriptions, and message handling.`  
+   `├── database.py        # Handles database connections, schema definition, and CRUD operations.`  
+   `├── visualization.py   # Visualizes sensor data and building model in Blender.`  
+   `└── requirements.txt   # List of dependencies (e.g., ifcopenshell, paho-mqtt).`
 
 
   ## **Roadmap**
