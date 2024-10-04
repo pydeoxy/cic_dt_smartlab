@@ -24,8 +24,8 @@ To ensure modularity, scalability, and maintainability, the project is organized
    `cic_dt_smartlab/`  
    `│`  
    `├── main.py            # Main entry point for running the digital twin.`  
-   `├── config.py          # Configuration settings for the MQTT broker, database, etc.`  
-   `├── Ifc_parser.py      # Parses the IFC model to extract building geometry and sensor locations.`  
+   `├── dt_config.py       # Configuration settings for the MQTT broker, database, etc.`  
+   `├── ifc_parser.py      # Parses the IFC model to extract building geometry and sensor locations.`  
    `├── mqtt_client.py     # Manages MQTT connection, subscriptions, and message handling.`  
    `├── database.py        # Handles database connections, schema definition, and CRUD operations.`  
    `├── visualization.py   # Visualizes sensor data and building model in Blender.`  
