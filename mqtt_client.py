@@ -33,14 +33,15 @@ def on_message(client, userdata, msg, db_path=CONFIG['db_path']):
         print(f"Error saving data: {e}")
 
 # MQTT Setup
-def setup_mqtt(mqtt_broker, mqtt_port, mqtt_topic):
+def setup_mqtt(mqtt_broker, mqtt_port, mqtt_topics):
     client = mqtt.Client()
     #client.on_connect = on_connect
     client.on_message = on_message
 
     # Connect to the MQTT broker (replace with your broker address and port)
     client.connect(mqtt_broker, mqtt_port, 60)
-    client.subscribe(mqtt_topic)
+    for topic in mqtt_topics:
+        client.subscribe(topic)
     
     # Start the MQTT loop in a non-blocking way
     client.loop_start()
@@ -48,6 +49,6 @@ def setup_mqtt(mqtt_broker, mqtt_port, mqtt_topic):
 
 if __name__ == '__main__': 
     import time    
-    client = setup_mqtt(CONFIG['mqtt_broker'], CONFIG['mqtt_port'])
+    client = setup_mqtt(CONFIG['mqtt_broker'], CONFIG['mqtt_port'], CONFIG['mqtt_topics'])
     while True:
         time.sleep(1)
