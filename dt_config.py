@@ -1,3 +1,8 @@
+import os
+
+# Get the directory where the current script is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 CONFIG = {
     #'ifc_file': 'path/to/building.ifc',
     'mqtt_broker': 'xrdevmqtt.edu.metropolia.fi',
@@ -15,5 +20,5 @@ CONFIG = {
                     'KNX/15/0/0<Bathroom.Sensors.CO2-ppm>',
                     'KNX/15/0/1<Bathroom.Sensors.RH|percent>'
                     ],
-    'db_path': 'C:/Users/yanpe/OneDrive - Metropolia Ammattikorkeakoulu Oy/Courses/DTIC/cic_dt_smartlab/sensor_data.db'
+    'db_path': os.path.join(current_dir, 'sensor_data.db')
 }
