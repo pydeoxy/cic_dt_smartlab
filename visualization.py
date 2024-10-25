@@ -13,7 +13,7 @@ def on_key(event):
         visualization_running = False
 
 # Function to update the plot with real-time data from the database
-def visualize_real_time_data(db_path):
+def visualize_real_time_data(db_path, topic):
     global visualization_running
 
     # Initialize plot
@@ -28,7 +28,7 @@ def visualize_real_time_data(db_path):
         ax.clear()
 
         # Fetch the latest data from the database
-        sensor_data = fetch_sensor_data(db_path)
+        sensor_data = fetch_sensor_data(db_path, topic)
 
         # Process data for plotting (adjust this if you are visualizing multiple sensors)
         if sensor_data:
@@ -59,4 +59,5 @@ def visualize_real_time_data(db_path):
 
 if __name__ == '__main__':
     from dt_config import CONFIG
-    visualize_real_time_data(CONFIG['db_path'])
+    topic = 'KNX/14/0/0<Bedroom.Sensors.CO2-ppm>'
+    visualize_real_time_data(CONFIG['db_path'],topic)
