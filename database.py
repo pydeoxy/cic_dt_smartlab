@@ -46,16 +46,23 @@ def save_sensor_data(sensor_data, db_path):
     finally:
         conn.close()  # Close the connection
 
-# Function to fetch sensor data from the database
-def fetch_sensor_data(db_path):
+# Function to fetch sensor data of a topic from the database
+def fetch_sensor_data(db_path, topic):
     conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute('SELECT sensor_id, timestamp, value FROM sensor_data')
+    cursor = conn.cursor()    
+
+    # Execute the query to find rows with the specific topic
+    cursor.execute("SELECT sensor_id, timestamp, value FROM sensor_data WHERE sensor_id = ?", (topic,))
+
     return cursor.fetchall()
 
 
-if __name__ == '__main__':    
-    db_path = 'C:/Users/yanpe/OneDrive - Metropolia Ammattikorkeakoulu Oy/Courses/DTIC/cic_dt_smartlab/sensor_data.db'
+if __name__ == '__main__':  
+    from dt_config import CONFIG
+    from pprint import pprint
+    topic = 'KNX/13/0/0<Livingroom.Sensors.CO2-ppm>'
+    sensor_data = fetch_sensor_data(CONFIG['db_path'],topic)
+    pprint(sensor_data)
     
 
 
