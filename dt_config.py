@@ -7,7 +7,9 @@ CONFIG = {
     #'ifc_file': 'path/to/building.ifc',
     'mqtt_broker': 'xrdevmqtt.edu.metropolia.fi',
     'mqtt_port': 1883,
-    'mqtt_topics': [# 'M-bus/Electricity/Current L2'
+    'mqtt_topics': ['M-bus/Electricity/Active Imported Energy Total',
+                    'M-bus/Electricity/Active Imported Power Total',
+                    'M-bus/Heat energy/Volume',
                     'KNX/13/0/2<Livingroom.Sensors.Air-temperature-C>',
                     'KNX/13/0/3<Livingroom.Sensors.Floor-temp-C>',
                     'KNX/13/0/0<Livingroom.Sensors.CO2-ppm>',
