@@ -46,6 +46,21 @@ def save_sensor_data(sensor_data, db_path):
     finally:
         conn.close()  # Close the connection
 
+# Function to save data to history database
+def save_to_history(sensor_data, history_db_path):
+    conn = connect_db(history_db_path)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO sensor_data (sensor_id, timestamp, value) VALUES (?, ?, ?)', 
+            (sensor_data['id'], sensor_data['timestamp'], sensor_data['value'])
+        )
+        conn.commit()  # Commit changes to the history database
+    except sqlite3.Error as e:
+        print(f"Error saving data to the history database: {e}")
+    finally:
+        conn.close()
+
 # Function to fetch sensor data of a topic from the database
 def fetch_sensor_data(db_path, topic):
     conn = sqlite3.connect(db_path)
@@ -61,8 +76,12 @@ if __name__ == '__main__':
     from dt_config import CONFIG
     from pprint import pprint
     topic = 'KNX/13/0/0<Livingroom.Sensors.CO2-ppm>'
-    sensor_data = fetch_sensor_data(CONFIG['db_path'],topic)
-    pprint(sensor_data)
+    history_sensor_data = fetch_sensor_data(CONFIG['history_db_path'],topic)
+    realtime_sensor_data = fetch_sensor_data(CONFIG['realtime_db_path'],topic)
+    print('History Sensor Data')
+    pprint(history_sensor_data)
+    print('Realtime Sensor Data')
+    pprint(realtime_sensor_data)
     
 
 

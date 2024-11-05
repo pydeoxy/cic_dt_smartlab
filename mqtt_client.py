@@ -1,8 +1,6 @@
 import paho.mqtt.client as mqtt
 import json
 from datetime import datetime  # For getting the current timestamp
-from database import save_sensor_data
-from dt_config import CONFIG
 
 # The callback for when the client connects to the broker
 '''def on_connect(client, userdata, flags, rc, mqtt_topic=CONFIG['mqtt_topic']):
@@ -11,7 +9,7 @@ from dt_config import CONFIG
     client.subscribe(mqtt_topic)'''
 
 # The callback for when a message is received from the broker
-def on_message(client, userdata, msg, db_path=CONFIG['db_path']):
+def on_message(client, userdata, msg, save_callback):
     try:
         # Decode the message payload from bytes to string (in this case, it's a number)
         payload_value = float(msg.payload.decode('utf-8'))
@@ -25,7 +23,7 @@ def on_message(client, userdata, msg, db_path=CONFIG['db_path']):
         print(f"Received sensor data: {sensor_data}")
 
         # Save the sensor data to the database
-        save_sensor_data(sensor_data, db_path)
+        save_callback(sensor_data)
 
     except ValueError as e:
         print(f"Error converting payload to float: {e}")
@@ -33,10 +31,10 @@ def on_message(client, userdata, msg, db_path=CONFIG['db_path']):
         print(f"Error saving data: {e}")
 
 # MQTT Setup
-def setup_mqtt(mqtt_broker, mqtt_port, mqtt_topics):
+def setup_mqtt(mqtt_broker, mqtt_port, mqtt_topics, save_callback):
     client = mqtt.Client()
-    #client.on_connect = on_connect
-    client.on_message = on_message
+    # Attach on_message callback with access to the save_callback
+    client.on_message = lambda client, userdata, msg: on_message(client, userdata, msg, save_callback)
 
     # Connect to the MQTT broker (replace with your broker address and port)
     client.connect(mqtt_broker, mqtt_port, 60)
@@ -48,7 +46,19 @@ def setup_mqtt(mqtt_broker, mqtt_port, mqtt_topics):
     return client
 
 if __name__ == '__main__': 
-    import time    
-    client = setup_mqtt(CONFIG['mqtt_broker'], CONFIG['mqtt_port'], CONFIG['mqtt_topics'])
+    from dt_config import CONFIG
+    import time   
+    import threading
+    from database import save_sensor_data, save_to_history
+
+    # Function to save data to both databases
+    def save_both_databases(sensor_data):
+        save_sensor_data(sensor_data, CONFIG['realtime_db_path'])  # Save to real-time database
+        save_to_history(sensor_data, CONFIG['history_db_path'])  
+    # Start the MQTT client in a separate thread
+    mqtt_thread = threading.Thread(target=setup_mqtt, args=(CONFIG['mqtt_broker'], CONFIG['mqtt_port'], CONFIG['mqtt_topics'], save_both_databases))
+    mqtt_thread.start()
+    print("MQTT client started") 
+    
     while True:
         time.sleep(1)

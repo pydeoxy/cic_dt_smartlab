@@ -22,5 +22,6 @@ CONFIG = {
                     'KNX/15/0/0<Bathroom.Sensors.CO2-ppm>',
                     'KNX/15/0/1<Bathroom.Sensors.RH|percent>'
                     ],
-    'db_path': os.path.join(current_dir, 'sensor_data.db')
+    'realtime_db_path': os.path.join(current_dir, 'sensor_data_realtime.db'),
+    'history_db_path': os.path.join(current_dir, 'sensor_data_history.db')
 }
