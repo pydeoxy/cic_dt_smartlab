@@ -23,7 +23,7 @@ def visualize_real_time_data(db_path, topic):
     # Connect the key press event to the on_key function
     fig.canvas.mpl_connect('key_press_event', on_key)
 
-    while visualization_running:
+    while visualization_running: 
         # Clear the axis to refresh the plot
         ax.clear()
 
@@ -60,4 +60,4 @@ def visualize_real_time_data(db_path, topic):
 if __name__ == '__main__':
     from dt_config import CONFIG
     topic = 'KNX/14/0/0<Bedroom.Sensors.CO2-ppm>'
-    visualize_real_time_data(CONFIG['db_path'],topic)
+    visualize_real_time_data(CONFIG['history_db_path'],topic)

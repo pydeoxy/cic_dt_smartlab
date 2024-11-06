@@ -1,16 +1,63 @@
 import threading
+import os
+import time
+import json
 from mqtt_client import setup_mqtt
 from database import connect_db, create_sensor_table, clear_old_data, save_sensor_data, save_to_history
 from visualization import visualize_real_time_data
+from dt_config import CONFIG  
+
+# Path for the shared file (you might set a specific directory here)
+TOPIC_FILE_PATH = "C:/CiC/DTIC/cic_dt_smartlab/shared_topic.json" # Update to a specific path accessible by both programs
+last_mod_time = None # Track the last modification time of the file
+visual_topic = None
+visualization_running = True
+stop_monitoring = False
+visual_topic_lock = threading.Lock()  # Lock for thread safety
+visual_topic_updated_event = threading.Event()  # Event to signal topic updates
+
+def read_visual_topic():
+    """Reads the selected topic from the shared file, if it has changed."""
+    global last_mod_time
+
+    try:
+        # Get the current modification time of the file
+        current_mod_time = os.path.getmtime(TOPIC_FILE_PATH)
+
+        # Check if the file has been modified since the last read
+        if last_mod_time is None or current_mod_time != last_mod_time:
+            last_mod_time = current_mod_time  # Update the last modification time
+
+            # Open and read the file content
+            with open(TOPIC_FILE_PATH, "r") as f:
+                data = json.load(f)
+                return data.get("visual_topic")
+        else:
+            return visual_topic  # No change detected, no need to re-read
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None  # Return None if the file doesn't exist or there's an error
+
+# Function to monitor the visual_topic update
+def monitor_visual_topic_update():
+    global visual_topic
+    while not stop_monitoring:
+        new_visual_topic = read_visual_topic()  # Function that gets the latest visual_topic value
+        with visual_topic_lock:
+            if new_visual_topic != visual_topic:
+                visual_topic = new_visual_topic
+                print(f"visual_topic updated: {visual_topic}")
+                visual_topic_updated_event.set()  # Signal topic change
+        #time.sleep(1)
 
 # Main function to start the MQTT client and visualization
-def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic, visual_topic):
+def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic):
+    global visualization_running, stop_monitoring
+
     # Connect to the database and ensure the sensor_data table exists
     conn = connect_db(realtime_db_path)
     create_sensor_table(conn)
-
-    # Optionally, clear the old data before saving new sensor data
-    clear_old_data(conn)  # Call this only if you need to clear the data
+    # Clear the old data before saving new sensor data
+    clear_old_data(conn)  
     conn.close()
 
     # Also connect to the history database and ensure the sensor_data table exists
@@ -22,6 +69,10 @@ def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic, 
     def save_both_databases(sensor_data):
         save_sensor_data(sensor_data, realtime_db_path)  # Save to real-time database
         save_to_history(sensor_data, history_db_path)    # Save to history database
+    
+    # Start monitoring for topic updates in a separate thread
+    #monitor_thread = threading.Thread(target=monitor_visual_topic_update)
+    #monitor_thread.start() 
 
     # Start the MQTT client in a separate thread
     mqtt_thread = threading.Thread(target=setup_mqtt, args=(mqtt_broker, mqtt_port, mqtt_topic, save_both_databases))
@@ -29,13 +80,13 @@ def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic, 
     print("MQTT client started")  # Debugging: Check if MQTT client thread starts
 
     # Start the real-time visualization in the main thread
-    visualize_real_time_data(realtime_db_path, visual_topic)
-    print("Visualization started")  # Debugging: Check if visualization starts
+    visualize_real_time_data(realtime_db_path, read_visual_topic())
 
     # Wait for the MQTT thread to finish
-    mqtt_thread.join()
+    #monitor_thread.join()
+    mqtt_thread.join()    
 
-if __name__ == "__main__":
-    from dt_config import CONFIG
-    topic = 'M-bus/Electricity/Active Imported Power Total'
-    main(CONFIG['realtime_db_path'], CONFIG['history_db_path'], CONFIG['mqtt_broker'], CONFIG['mqtt_port'], CONFIG['mqtt_topics'], topic)
+if __name__ == "__main__":    
+    main(CONFIG['realtime_db_path'], CONFIG['history_db_path'], 
+        CONFIG['mqtt_broker'], CONFIG['mqtt_port'], 
+        CONFIG['mqtt_topics'])
