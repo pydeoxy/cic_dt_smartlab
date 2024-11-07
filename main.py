@@ -8,7 +8,7 @@ from visualization import visualize_real_time_data
 from dt_config import CONFIG  
 
 # Path for the shared file (you might set a specific directory here)
-TOPIC_FILE_PATH = "C:/CiC/DTIC/cic_dt_smartlab/shared_topic.json" # Update to a specific path accessible by both programs
+TOPIC_FILE_PATH = ".\shared_topic.json" # Update to a specific path accessible by both programs
 last_mod_time = None # Track the last modification time of the file
 visual_topic = None
 visualization_running = True
@@ -47,7 +47,7 @@ def monitor_visual_topic_update():
                 visual_topic = new_visual_topic
                 print(f"visual_topic updated: {visual_topic}")
                 visual_topic_updated_event.set()  # Signal topic change
-        #time.sleep(1)
+        time.sleep(1)
 
 # Main function to start the MQTT client and visualization
 def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic):
@@ -90,3 +90,4 @@ if __name__ == "__main__":
     main(CONFIG['realtime_db_path'], CONFIG['history_db_path'], 
         CONFIG['mqtt_broker'], CONFIG['mqtt_port'], 
         CONFIG['mqtt_topics'])
+    #monitor_visual_topic_update()

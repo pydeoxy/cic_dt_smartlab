@@ -5,13 +5,26 @@ import time
 import paho.mqtt.client as mqtt
 from dt_config import CONFIG
 
+"""
+Run the following lines in Python Console in Blender before running the script:
+
+import sys
+sys.path
+sys.path.append('C:\\Users\\yanpe\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\Scripts')
+sys.path.append('C:\\Users\\yanpe\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages')
+sys.path.append('C:\\Users\\yanpe\\Documents\\projects\\cic_dt_smartlab')
+
+"""
+
 # MQTT settings from CONFIG
 MQTT_BROKER = CONFIG['mqtt_broker']
 MQTT_PORT = CONFIG['mqtt_port']
 MQTT_TOPICS = CONFIG['mqtt_topics']
 
 # Path for the shared file (you might set a specific directory here)
-TOPIC_FILE_PATH = "C:/CiC/DTIC/cic_dt_smartlab/shared_topic.json" # Update to a specific path accessible by both programs
+TOPIC_FILE_PATH = "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json" # Update to a specific path accessible by both programs
+# "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json"
+# "C:/CiC/DTIC/cic_dt_smartlab/shared_topic.json"
 
 # Global variable to track the selected topic
 selected_topic = MQTT_TOPICS[0]  # Default to the first topic
