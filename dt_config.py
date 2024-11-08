@@ -10,6 +10,8 @@ CONFIG = {
     'mqtt_topics': ['M-bus/Electricity/Active Imported Energy Total',
                     'M-bus/Electricity/Active Imported Power Total',
                     'M-bus/Heat energy/Volume',
+                    'M-bus/Cold water/Flow Total',
+                    'M-bus/Hot water/Flow Total',
                     'KNX/13/0/2<Livingroom.Sensors.Air-temperature-C>',
                     'KNX/13/0/3<Livingroom.Sensors.Floor-temp-C>',
                     'KNX/13/0/0<Livingroom.Sensors.CO2-ppm>',
