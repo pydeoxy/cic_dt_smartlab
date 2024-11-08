@@ -59,5 +59,5 @@ def visualize_real_time_data(db_path, topic):
 
 if __name__ == '__main__':
     from dt_config import CONFIG
-    topic = 'KNX/14/0/0<Bedroom.Sensors.CO2-ppm>'
+    topic = 'M-bus/Electricity/Active Imported Power Total'
     visualize_real_time_data(CONFIG['history_db_path'],topic)

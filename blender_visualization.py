@@ -7,9 +7,10 @@ from dt_config import CONFIG
 
 """
 Run the following lines in Python Console in Blender before running the script:
+(Replace the folder locations with your own Python folders and local Git repository)
 
 import sys
-sys.path
+#sys.path
 sys.path.append('C:\\Users\\yanpe\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\Scripts')
 sys.path.append('C:\\Users\\yanpe\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages')
 sys.path.append('C:\\Users\\yanpe\\Documents\\projects\\cic_dt_smartlab')
@@ -21,8 +22,8 @@ MQTT_BROKER = CONFIG['mqtt_broker']
 MQTT_PORT = CONFIG['mqtt_port']
 MQTT_TOPICS = CONFIG['mqtt_topics']
 
-# Path for the shared file (you might set a specific directory here)
-TOPIC_FILE_PATH = "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json" # Update to a specific path accessible by both programs
+# Path for the shared file (Replace the path with your local Git repository)
+TOPIC_FILE_PATH = "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json" 
 # "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json"
 # "C:/CiC/DTIC/cic_dt_smartlab/shared_topic.json"
 
