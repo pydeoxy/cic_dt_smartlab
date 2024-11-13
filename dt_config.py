@@ -4,7 +4,7 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 CONFIG = {
-    #'ifc_file': 'path/to/building.ifc',
+    'ifc_file': '.\ifc\smartLab.ifc',
     'mqtt_broker': 'xrdevmqtt.edu.metropolia.fi',
     'mqtt_port': 1883,
     'mqtt_topics': ['M-bus/Electricity/Active Imported Energy Total',
