@@ -7,7 +7,7 @@ from dt_config import CONFIG
 #import bonsai.tool as tool
 
 # Google Drive file ID of the shared IFC model
-file_id = "1Pc9irGXb5AJkfKpWgLCcPK7qiSLApx70"
+file_id = CONFIG['ifc_file_id']
 # Local path to store the IFC model
 ifc_file = CONFIG['ifc_file']
 
