@@ -4,6 +4,7 @@ import threading
 import time
 import paho.mqtt.client as mqtt
 from dt_config import CONFIG
+import ifcopenshell
 
 """
 Run the following lines in Python Console in Blender before running the script:
@@ -21,11 +22,8 @@ sys.path.append('C:\\Users\\yanpe\\Documents\\projects\\cic_dt_smartlab')
 MQTT_BROKER = CONFIG['mqtt_broker']
 MQTT_PORT = CONFIG['mqtt_port']
 MQTT_TOPICS = CONFIG['mqtt_topics']
-
-# Path for the shared file (Replace the path with your local Git repository)
-TOPIC_FILE_PATH = "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json" 
-# "C:/Users/yanpe/Documents/projects/cic_dt_smartlab/shared_topic.json"
-# "C:/CiC/DTIC/cic_dt_smartlab/shared_topic.json"
+TOPIC_FILE_PATH = CONFIG['TOPIC_FILE_PATH'] 
+ifc_file = CONFIG['ifc_file']
 
 # Global variable to track the selected topic
 selected_topic = MQTT_TOPICS[0]  # Default to the first topic

@@ -1,7 +1,6 @@
 import json
 
-CONFIG = {
-    'ifc_file': '.\ifc\smartLab.ifc',    
+CONFIG = {       
     'mqtt_topics': ['M-bus/Electricity/Active Imported Energy Total',
                     'M-bus/Electricity/Active Imported Power Total',
                     'M-bus/Heat energy/Volume',
@@ -19,16 +18,17 @@ CONFIG = {
                     'KNX/15/0/0<Bathroom.Sensors.CO2-ppm>',
                     'KNX/15/0/1<Bathroom.Sensors.RH|percent>'
                     ],
-    'realtime_db_path': '.\sensor_data_realtime.db',
-    'history_db_path': '.\sensor_data_history.db'
+    'realtime_db_path': './sensor_data_realtime.db',
+    'history_db_path': './sensor_data_history.db'
 }
 
 # Replace the file location with your own path
-local_config = "C:/Users/yanpe/Documents/projects/smartlab_config.json"
+local_config = "C:/Users/yanpe/Documents/projects/cic_dt_smartlab_files/smartlab_config.json"
 # Open and read the file content
 with open(local_config, "r") as f:
     data = json.load(f)
     CONFIG.update(data)
 
 if __name__ == "__main__":
-    print(CONFIG)
+    from pprint import pprint
+    pprint(CONFIG)
