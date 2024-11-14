@@ -83,7 +83,7 @@ def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic):
     print("MQTT client started")  # Debugging: Check if MQTT client thread starts
 
     # Start the real-time visualization in the main thread
-    visualize_real_time_data(realtime_db_path, read_visual_topic())        
+    visualize_real_time_data(realtime_db_path, TOPIC_FILE_PATH)        
        
     # Wait for the MQTT thread to finish
     mqtt_thread.join()    
