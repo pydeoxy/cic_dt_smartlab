@@ -3,7 +3,7 @@ import os
 import time
 import json
 from mqtt_client import setup_mqtt
-from database import connect_db, create_sensor_table, clear_old_data, save_sensor_data, save_to_history
+from database import connect_db, create_sensor_table, clear_old_data, save_sensor_data, save_to_history, fetch_sensor_data
 from visualization import visualize_real_time_data
 from dt_config import CONFIG  
 
@@ -18,24 +18,31 @@ visual_topic_updated_event = threading.Event()  # Event to signal topic updates
 
 def read_visual_topic():
     """Reads the selected topic from the shared file, if it has changed."""
-    global last_mod_time
+    global last_mod_time, visual_topic
 
     try:
         # Get the current modification time of the file
         current_mod_time = os.path.getmtime(TOPIC_FILE_PATH)
 
-        # Check if the file has been modified since the last read
-        if last_mod_time is None or current_mod_time != last_mod_time:
-            last_mod_time = current_mod_time  # Update the last modification time
+        with visual_topic_lock:
+            # Check if the file has been modified since the last read
+            if last_mod_time is None or current_mod_time != last_mod_time:
+                last_mod_time = current_mod_time  # Update the last modification time
 
-            # Open and read the file content
-            with open(TOPIC_FILE_PATH, "r") as f:
-                data = json.load(f)
-                return data.get("visual_topic")
-        else:
-            return visual_topic  # No change detected, no need to re-read
-    except (FileNotFoundError, json.JSONDecodeError):
-        return None  # Return None if the file doesn't exist or there's an error
+                # Open and read the file content
+                with open(TOPIC_FILE_PATH, "r") as f:
+                    data = json.load(f)
+                    visual_topic = data.get("visual_topic")  # Update global visual_topic
+                    print(f"Topic updated to: {visual_topic}")  # Logging
+            # Return the updated visual_topic
+            return visual_topic
+
+    except FileNotFoundError:
+        print("Error: Topic file not found.")
+        return None  # Return None if the file doesn't exist
+    except json.JSONDecodeError:
+        print("Error: JSON decoding issue in the topic file.")
+        return None  # Return None if JSON format is invalid
 
 # Function to monitor the visual_topic update
 def monitor_visual_topic_update():
@@ -70,20 +77,15 @@ def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic):
         save_sensor_data(sensor_data, realtime_db_path)  # Save to real-time database
         save_to_history(sensor_data, history_db_path)    # Save to history database
     
-    # Start monitoring for topic updates in a separate thread
-    #monitor_thread = threading.Thread(target=monitor_visual_topic_update)
-    #monitor_thread.start() 
-
     # Start the MQTT client in a separate thread
     mqtt_thread = threading.Thread(target=setup_mqtt, args=(mqtt_broker, mqtt_port, mqtt_topic, save_both_databases))
     mqtt_thread.start()
     print("MQTT client started")  # Debugging: Check if MQTT client thread starts
 
     # Start the real-time visualization in the main thread
-    visualize_real_time_data(realtime_db_path, read_visual_topic())
-
+    visualize_real_time_data(realtime_db_path, read_visual_topic())        
+       
     # Wait for the MQTT thread to finish
-    #monitor_thread.join()
     mqtt_thread.join()    
 
 if __name__ == "__main__":    
