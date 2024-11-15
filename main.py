@@ -6,6 +6,7 @@ from mqtt_client import setup_mqtt
 from database import connect_db, create_sensor_table, clear_old_data, save_sensor_data, save_to_history, fetch_sensor_data
 from visualization import visualize_real_time_data
 from dt_config import CONFIG  
+from ifc_parser import download_ifc_file
 
 # Path for the shared file (you might set a specific directory here)
 TOPIC_FILE_PATH = ".\shared_topic.json" # Update to a specific path accessible by both programs
@@ -88,7 +89,8 @@ def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic):
     # Wait for the MQTT thread to finish
     mqtt_thread.join()    
 
-if __name__ == "__main__":    
+if __name__ == "__main__":        
+    download_ifc_file(CONFIG['ifc_file_id'],CONFIG['ifc_file']) 
     main(CONFIG['realtime_db_path'], CONFIG['history_db_path'], 
         CONFIG['mqtt_broker'], CONFIG['mqtt_port'], 
         CONFIG['mqtt_topics'])

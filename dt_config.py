@@ -1,4 +1,7 @@
 import json
+import os
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 
 CONFIG = {       
     'mqtt_topics': ['M-bus/Electricity/Active Imported Energy Total',
@@ -22,9 +25,21 @@ CONFIG = {
     'history_db_path': './sensor_data_history.db'
 }
 
-# Replace the file location with your own path
-local_config = "C:/Users/yanpe/Documents/projects/cic_dt_smartlab_files/smartlab_config.json"
-# Open and read the file content
+def file_folder_path():    
+    Tk().withdraw()  
+    local_folder = askdirectory(title="Select your local file folder")
+    if not local_folder:
+        print("No folder selected. Exiting.")
+        return    
+    return local_folder
+
+# Get the directory of the current running Python file
+local_repository = os.path.dirname(os.path.abspath(__file__))
+
+CONFIG["TOPIC_FILE_PATH"]= f"{local_repository}/shared_topic.json"
+CONFIG["ifc_file"] = f"{local_repository}/smartLab.ifc"
+local_config = f"{local_repository}/smartlab_config.json"
+
 with open(local_config, "r") as f:
     data = json.load(f)
     CONFIG.update(data)

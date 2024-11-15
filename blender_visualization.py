@@ -32,8 +32,8 @@ selected_topic = MQTT_TOPICS[0]  # Default to the first topic
 def on_message(client, userdata, msg):
     if msg.topic == selected_topic:
         try:
-            sensor_data = json.loads(msg.payload.decode())
-            value = sensor_data["value"]
+            sensor_data = json.loads(msg.payload.decode('utf-8'))
+            value = float(sensor_data["value"])
 
             # Map value to color
             color = [min(value / 100, 1), 0.2, 1 - min(value / 100, 1), 1]  # Example RGB mapping
