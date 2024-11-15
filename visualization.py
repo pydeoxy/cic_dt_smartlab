@@ -82,11 +82,7 @@ def visualize_real_time_data(db_path, json_path):
         plt.close(fig)
 
         # Small delay to prevent excessive checking
-        time.sleep(1)
-
-        if keyboard.is_pressed('esc'):
-            print("Esc pressed. Exiting...")
-            break
+        time.sleep(1)        
 
 # Function to visualize historical data from the database without real-time updates
 def visualize_history_data(db_path, topic):
