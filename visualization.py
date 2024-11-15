@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from database import fetch_sensor_data
 import datetime, time
 import json
-import keyboard
 
 # Function to fetch selected topic from JSON file
 def get_selected_topic(json_path):
