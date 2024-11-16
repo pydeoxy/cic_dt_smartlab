@@ -2,7 +2,7 @@
 
 # **Project Overview**
 
-This project is a proof-of-concept for the Digital Twin of SmartLab, built as part of the CiC Digital Twins initiative. The main objectives of the project are to integrate real-time sensor data from an MQTT broker, manage data storage, and visualize the SmartLab building and sensor data in Blender. The project establishes a practical workflow for developing a Minimum Viable Product (MVP) using Git, Google Drive, Colab, and VS Code as development tools.
+This project is a proof-of-concept for the Digital Twin of SmartLab, built as part of the CiC Digital Twins initiative. The main objectives of the project are to integrate real-time sensor data from an MQTT broker, manage data storage, and visualize the SmartLab building and sensor data in Blender. The project establishes a practical workflow for developing a Minimum Viable Product (MVP) using Git, Google Drive, and VS Code as development tools.
 
 ## **Project Objectives**
 
@@ -30,7 +30,9 @@ To ensure modularity, scalability, and maintainability, the project is organized
    `├── database.py                # Handles database connections, schema definition, and CRUD operations.`  
    `├── visualization.py           # Visualizes sensor data.`  
    `├── blender_visualization.py   # Visualizes sensors and building model in Blender.`        
-   `├── shared_topic.json          # Store the same topic of sensor data visualized in Blender and matplotlib.`        
+   `├── shared_topic.json          # Store the same topic of sensor data visualized in Blender and matplotlib.`  
+   `├── sensor_data_history.db     # Store the historical sensor data received from the MQTT brocker.`   
+   `├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.`   
    `└── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).`
 
 
