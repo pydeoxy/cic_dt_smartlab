@@ -1,7 +1,5 @@
 import json
 import os
-from tkinter import Tk
-from tkinter.filedialog import askdirectory
 
 CONFIG = {       
     'mqtt_topics': ['M-bus/Electricity/Active Imported Energy Total',
@@ -24,14 +22,6 @@ CONFIG = {
     'realtime_db_path': './sensor_data_realtime.db',
     'history_db_path': './sensor_data_history.db'
 }
-
-def file_folder_path():    
-    Tk().withdraw()  
-    local_folder = askdirectory(title="Select your local file folder")
-    if not local_folder:
-        print("No folder selected. Exiting.")
-        return    
-    return local_folder
 
 # Get the directory of the current running Python file
 local_repository = os.path.dirname(os.path.abspath(__file__))

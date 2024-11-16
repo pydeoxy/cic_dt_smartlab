@@ -90,7 +90,7 @@ def main(realtime_db_path, history_db_path, mqtt_broker, mqtt_port, mqtt_topic):
     mqtt_thread.join()    
 
 if __name__ == "__main__":        
-    download_ifc_file(CONFIG['ifc_file_id'],CONFIG['ifc_file']) 
+    #download_ifc_file(CONFIG['ifc_file_id'],CONFIG['ifc_file']) 
     main(CONFIG['realtime_db_path'], CONFIG['history_db_path'], 
         CONFIG['mqtt_broker'], CONFIG['mqtt_port'], 
         CONFIG['mqtt_topics'])
