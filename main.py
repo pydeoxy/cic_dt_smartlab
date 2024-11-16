@@ -9,7 +9,7 @@ from dt_config import CONFIG
 from ifc_parser import download_ifc_file
 
 # Path for the shared file (you might set a specific directory here)
-TOPIC_FILE_PATH = ".\shared_topic.json" # Update to a specific path accessible by both programs
+TOPIC_FILE_PATH = CONFIG['TOPIC_FILE_PATH'] # Update to a specific path accessible by both programs
 last_mod_time = None # Track the last modification time of the file
 visual_topic = None
 visualization_running = True
