@@ -11,13 +11,13 @@ This project is a proof-of-concept for the Digital Twin of SmartLab, built as pa
 * **3D Visualization**: Visualize the SmartLab building and sensor data using Blender.  
 * **Modularity and Scalability**: Maintain a well-structured Python codebase that is scalable and easy to maintain.
 
-  ## **Tools and Resources**
+## **Tools and Resources**
 
 * **IFC Model**: The IFC model of the SmartLab building.  
 * **MQTT Sensors**: Real-time sensor data streaming via MQTT.  
 * **Development Tools**: Python, Blender, Bonsai, IfcOpenShell, paho-mqtt, etc.
 
-  ## **File Structure**
+## **File Structure**
 
 To ensure modularity, scalability, and maintainability, the project is organized as follows:
 
