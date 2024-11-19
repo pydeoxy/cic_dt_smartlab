@@ -1,26 +1,36 @@
 # **CiC Digital Twins Project of SmartLab**
 
-# **Project Overview**
+## **Project Overview**
 
-This project is a proof-of-concept for the Digital Twin of SmartLab, built as part of the CiC Digital Twins initiative. The main objectives of the project are to integrate real-time sensor data from an MQTT broker, manage data storage, and visualize the SmartLab building and sensor data in Blender. The project establishes a practical workflow for developing a Minimum Viable Product (MVP) using Git, Google Drive, and VS Code as development tools.
+The **CiC Digital Twins Project of SmartLab** is a proof-of-concept initiative designed to create a **Digital Twin** for the SmartLab environment. This project integrates real-time sensor data, efficient data management, and 3D visualization to provide a seamless representation of the building and its sensor network. It is part of the **Digital Twins in Construction** course of **Computing in Construction** program at **Metropolia**.
+
+The project demonstrates a practical workflow for building a Minimum Viable Product (MVP), leveraging modern tools like Git, Google Drive, and VS Code for efficient development.
 
 ## **Project Objectives**
 
 * **Real-time Integration**: Capture real-time sensor data using MQTT.  
-* **Data Management**: Store sensor data in a database and support CRUD operations.  
-* **3D Visualization**: Visualize the SmartLab building and sensor data using Blender.  
+* **Data Management**: Store sensor data in a database with support for Create, Read, Update, Delete (CRUD) operations. 
+* **3D Visualization**: Visualize the sensor data and visualize SmartLab building with parts related to corresponding sensor data using Blender.  
 * **Modularity and Scalability**: Maintain a well-structured Python codebase that is scalable and easy to maintain.
 
-  ## **Tools and Resources**
+## **Features**
+* Building Information Modeling (BIM) integration using the IFC model.
+* Real-time data streaming with MQTT.
+* Robust database handling for real-time and historical sensor data.
+* Intuitive 3D visualization in Blender with sensor overlays.
 
-* **IFC Model**: The IFC model of the SmartLab building.  
-* **MQTT Sensors**: Real-time sensor data streaming via MQTT.  
-* **Development Tools**: Python, Blender, Bonsai, IfcOpenShell, paho-mqtt, etc.
+## **Tools and Resources**
 
-  ## **File Structure**
+* **Languages & Frameworks**: Python
+* **3D & BIM Tools**: Blender, IfcOpenShell
+* **IoT & Messaging**: MQTT, paho-mqtt
+* **Database**: SQLite3
+* **Version Control**: Git
+
+## **File Structure**
 
 To ensure modularity, scalability, and maintainability, the project is organized as follows:
-
+```
    `cic_dt_smartlab/`  
    `│`  
    `├── main.py                    # Main entry point for running the digital twin.`  
@@ -34,27 +44,58 @@ To ensure modularity, scalability, and maintainability, the project is organized
    `├── sensor_data_history.db     # Store the historical sensor data received from the MQTT brocker.`   
    `├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.`   
    `└── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).`
+  ```
 
 
-  ## **Roadmap**
+## **How to Get Started**
 
-  ### **Current Work**
+### **Prerequisites**
 
-* **Minimal Viable Program**:  
-  * Core files (main.py, config.py, mqtt\_client.py, database.py, visualization.py) are functional.  
-  * Sensor data is successfully stored in `sensor_data.db` and visualized in a separate window in real-time.
+  * Install **Python 3.10**.  
+  * Ensure **Blender 4.2** is installed.
 
-  ### **Upcoming Work**
+### **Installation**
 
-* **Coordination**:  
-  * Set up a GitHub repository to manage the project and implement a Git workflow.  
-  * Define a strategy for sharing large files (IFC models, databases) via Google Drive or other storage solutions.  
-* **IFC Model**:  
-  * Update and maintain the IFC model with shared access through Google Drive.  
-  * Ensure sensor data from MQTT aligns with sensor data in the IFC model.  
-* **Visualization**:  
-  * Add Blender operators for interactive controls and display sensor data in a pop-up window.  
-* **Database**:  
-  * Implement two separate databases: one for historical data storage and one for real-time data visualization.
+1. Clone the repository:
+  ```
+  git clone https://github.com/yourusername/cic-digital-twins.git  
+  cd cic-digital-twins
+  ```
+2. Install dependencies:
+  ```
+  pip install -r requirements.txt  
+  ```
+3. Configure `dt_config.py` with your MQTT broker, database, and Blender paths.
 
-  
+### **Running the Project**
+
+1. Start the digital twin:
+  ```
+  python main.py  
+  ```
+2. Start Blender, run the following lines in the Console:
+  ```
+  import sys
+  sys.path.append('<you_path_to_python>\\Scripts')
+  sys.path.append('<you_path_to_python>\\site-packages')
+  sys.path.append('<you_path_to_local_repository>')  
+  ```
+  Run blender_visualization.py in Scripting.
+3. Choose the MQTT topic from generated drop-down menu to be visualized.
+
+## **Details**
+
+### **Real-time Integration**
+* Subscribes to topics using **MQTT** to retrieve sensor data in real-time.
+* Uses `paho-mqtt` for message handling and updates.
+
+### **Data Management**
+* **SQLite3** is used to store:
+  * Real-time sensor data (`sensor_data_realtime.db`) for visualization.
+  * Historical data (`sensor_data_history.db`) for analytics and audits.
+
+### **Visualization**
+1. **2D Visualization**: Displays sensor data trends using `visualization.py`.
+2. **3D Visualization**:
+  * Renders building geometry and overlays sensor data in **Blender**.
+  * Supports dynamic updates for real-time exploration.
