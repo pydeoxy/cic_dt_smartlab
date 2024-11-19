@@ -83,6 +83,13 @@ To ensure modularity, scalability, and maintainability, the project is organized
   Run blender_visualization.py in Scripting.
 3. Choose the MQTT topic from generated drop-down menu to be visualized.
 
+4. Other functions:
+* Download and update the IFC model:
+  ```
+  python ifc_parser.py  
+  ```
+  Press 'Yes' in the pop up window to download and update the IFC file.
+
 ## **Details**
 
 ### **Real-time Integration**
