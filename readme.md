@@ -51,7 +51,7 @@ To ensure modularity, scalability, and maintainability, the project is organized
 
 ### **Prerequisites**
 
-  * Install **Python 3.10**.  
+  * Install **Python 3.10+**.  
   * Ensure **Blender 4.2** is installed.
 
 ### **Installation**
