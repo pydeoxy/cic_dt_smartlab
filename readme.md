@@ -33,19 +33,19 @@ The project demonstrates a practical workflow for building a Minimum Viable Prod
 
 To ensure modularity, scalability, and maintainability, the project is organized as follows:
 ```
-   `cic_dt_smartlab/`  
-   `│`  
-   `├── main.py                    # Main entry point for running the digital twin.`  
-   `├── dt_config.py               # Configuration settings for the MQTT broker, database, etc.`  
-   `├── ifc_parser.py              # Parses the IFC model to extract building geometry and sensor locations.`  
-   `├── mqtt_client.py             # Manages MQTT connection, subscriptions, and message handling.`  
-   `├── database.py                # Handles database connections, schema definition, and CRUD operations.`  
-   `├── visualization.py           # Visualizes sensor data.`  
-   `├── blender_visualization.py   # Visualizes sensors and building model in Blender.`        
-   `├── shared_topic.json          # Store the same topic of sensor data visualized in Blender and matplotlib.`  
-   `├── sensor_data_history.db     # Store the historical sensor data received from the MQTT brocker.`   
-   `├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.`   
-   `└── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).`
+   cic_dt_smartlab/  
+   │ 
+   ├── main.py                    # Main entry point for running the digital twin.  
+   ├── dt_config.py               # Configuration settings for the MQTT broker, database, etc.  
+   ├── ifc_parser.py              # Parses the IFC model to extract building geometry and sensor locations.  
+   ├── mqtt_client.py             # Manages MQTT connection, subscriptions, and message handling.  
+   ├── database.py                # Handles database connections, schema definition, and CRUD operations.  
+   ├── visualization.py           # Visualizes sensor data.`  
+   ├── blender_visualization.py   # Visualizes sensors and building model in Blender.        
+   ├── shared_topic.json          # Store the same topic of sensor data visualized in Blender and matplotlib.  
+   ├── sensor_data_history.db     # Store the historical sensor data received from the MQTT brocker.   
+   ├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.   
+   └── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).
   ```
 
 
