@@ -20,7 +20,6 @@ The project demonstrates a practical workflow for building a Minimum Viable Prod
 * Intuitive 3D visualization in Blender with sensor overlays.
 
 ## **Tools and Resources**
-## **Tools and Resources**
 
 * **Languages & Frameworks**: Python
 * **3D & BIM Tools**: Blender, IfcOpenShell
@@ -28,7 +27,6 @@ The project demonstrates a practical workflow for building a Minimum Viable Prod
 * **Database**: SQLite3
 * **Version Control**: Git
 
-## **File Structure**
 ## **File Structure**
 
 To ensure modularity, scalability, and maintainability, the project is organized as follows:
