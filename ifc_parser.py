@@ -59,7 +59,8 @@ if __name__ == '__main__':
     # Local path to store the IFC model
     ifc_file = CONFIG['ifc_file']
     download_ifc_file(file_id,ifc_file)  
-    #model = parse_ifc_file(ifc_file)
-    #walls = model.by_type('IfcWallStandardCase')
-    #for wall in walls:
-    #    print(wall.GlobalId)
+    model = parse_ifc_file(ifc_file)
+    spaces = model.by_type('IfcSpace')
+    print(len(spaces))
+    for space in spaces:
+        print(space.GlobalId, space.Name)

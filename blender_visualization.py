@@ -1,10 +1,13 @@
 import bpy
+import os
 import json
 import threading
 import time
 import paho.mqtt.client as mqtt
-from dt_config import CONFIG
+from dt_config import CONFIG, sensor_ifc_link
 import ifcopenshell
+from bonsai.bim.ifc import IfcStore
+import bonsai.tool as tool
 
 """
 Run the following lines in Python Console in Blender before running the script:
@@ -27,6 +30,8 @@ ifc_file = CONFIG['ifc_file']
 
 # Global variable to track the selected topic
 selected_topic = MQTT_TOPICS[0]  # Default to the first topic
+# Load the IFC model opened in Blender Bonsai
+model = IfcStore.get_file()    
 
 # Function to handle incoming MQTT messages
 def on_message(client, userdata, msg):
@@ -53,7 +58,6 @@ def setup_blender_mqtt():
     client.subscribe(selected_topic)
     client.loop_start()
 
-
 # Operator to start the Blender visualization (runs in a background thread)
 class StartBlenderVisualizationOperator(bpy.types.Operator):
     bl_idname = "wm.start_blender_visualization"
@@ -78,7 +82,6 @@ class StartBlenderVisualizationOperator(bpy.types.Operator):
         if self._timer:
             context.window_manager.event_timer_remove(self._timer)
 
-
 # Custom panel for topic selection in the 3D View
 class TopicSelectionPanel(bpy.types.Panel):
     bl_label = "MQTT Topic Selection"
@@ -94,12 +97,29 @@ class TopicSelectionPanel(bpy.types.Panel):
         row = layout.row()
         row.operator("wm.start_blender_visualization")
 
+def select_by_guid(model, topic):
+    guids = sensor_ifc_link[topic]
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Find the object with the specified GUID    
+    for guid in guids:
+        obj = tool.Ifc.get_object(model.by_guid(guid))
+        # Set the object as active and selected
+        bpy.context.view_layer.objects.active = obj
+        obj.select_set(True)
+        print(f"Object with GUID {guid} selected: {obj.name}")
+    else:
+        print(f"No object found with GUID: {guid}")
 
 # Function to update the selected topic and write it to a shared file
 def update_selected_topic(self, context):
     global selected_topic
     selected_topic = context.scene.selected_mqtt_topic
     print(f"Selected topic updated to: {selected_topic}")
+
+    # Select the IfcSpace entities by the selected_topic
+    select_by_guid(model, selected_topic)
 
     # Write the selected topic to the shared file
     with open(TOPIC_FILE_PATH, "w") as f:
@@ -120,12 +140,10 @@ def register():
     bpy.utils.register_class(StartBlenderVisualizationOperator)
     bpy.utils.register_class(TopicSelectionPanel)
 
-
 def unregister():
     del bpy.types.Scene.selected_mqtt_topic
     bpy.utils.unregister_class(StartBlenderVisualizationOperator)
     bpy.utils.unregister_class(TopicSelectionPanel)
-
 
 if __name__ == "__main__":
     register()
