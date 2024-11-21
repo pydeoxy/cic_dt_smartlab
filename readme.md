@@ -119,3 +119,10 @@ To ensure modularity, scalability, and maintainability, the project is organized
 2. **3D Visualization**:
   * Renders building geometry and overlays sensor data in **Blender**.
   * Supports dynamic updates for real-time exploration.
+
+### **Extensibility**
+This program is designed for flexibility and future development.
+* **Customizable MQTT Configuration**: The MQTT broker setup and the mapping between MQTT topics and IFC entities can be tailored to suit your specific requirements.
+* **Private Database Support**: You can use your own private database files to ensure data privacy and compatibility.
+* **Scalable for Digital Twins**: The program's design allows it to be adapted for other digital twin projects, making it a versatile tool for various applications.
+* **Future Development**: Easily extend and enhance the program to meet evolving needs and requirements.

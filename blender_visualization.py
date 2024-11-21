@@ -33,7 +33,7 @@ selected_topic = MQTT_TOPICS[0]  # Default to the first topic
 model = IfcStore.get_file()    
 
 # Function to handle incoming MQTT messages
-def on_message(client, userdata, msg):
+'''def on_message(client, userdata, msg):
     if msg.topic == selected_topic:
         try:
             sensor_data = json.loads(msg.payload.decode('utf-8'))
@@ -46,13 +46,12 @@ def on_message(client, userdata, msg):
             # Change color of an object in Blender (adjust 'Cube' to your object name)
             bpy.data.objects['Cube'].active_material.diffuse_color = color
         except Exception as e:
-            print(f"Failed to update color: {e}")
-
+            print(f"Failed to update color: {e}")'''
 
 # Function to set up MQTT and subscribe to the selected topic
 def setup_blender_mqtt():
     client = mqtt.Client()
-    client.on_message = on_message
+    #client.on_message = on_message
     client.connect(MQTT_BROKER, MQTT_PORT, 60)
     client.subscribe(selected_topic)
     client.loop_start()
@@ -96,20 +95,81 @@ class TopicSelectionPanel(bpy.types.Panel):
         row = layout.row()
         row.operator("wm.start_blender_visualization")
 
-def select_by_guid(model, topic):
-    guids = sensor_ifc_link[topic]
-    # Deselect all objects
-    bpy.ops.object.select_all(action='DESELECT')
+# Add a global variable to track previously selected GUIDs
+previous_guids = []
 
-    # Find the object with the specified GUID    
-    for guid in guids:
-        obj = tool.Ifc.get_object(model.by_guid(guid))
-        # Set the object as active and selected
-        bpy.context.view_layer.objects.active = obj
-        obj.select_set(True)
-        print(f"Object with GUID {guid} selected: {obj.name}")
+def set_translucent_material(obj, color=None, transparency=0.2):
+    """Set the material of an object to translucent."""
+    if not obj.data.materials:
+        mat = bpy.data.materials.new(name="IfcSpaceMaterial")
+        obj.data.materials.append(mat)
     else:
-        print(f"No object found with GUID: {guid}")
+        mat = obj.data.materials[0]
+
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+
+    # Clear existing nodes
+    for node in nodes:
+        nodes.remove(node)
+
+    # Create new nodes for transparency
+    output_node = nodes.new(type="ShaderNodeOutputMaterial")
+    output_node.location = (300, 0)
+
+    mix_shader = nodes.new(type="ShaderNodeMixShader")
+    mix_shader.location = (100, 0)
+
+    transparent_node = nodes.new(type="ShaderNodeBsdfTransparent")
+    transparent_node.location = (-200, 100)
+
+    diffuse_node = nodes.new(type="ShaderNodeBsdfDiffuse")
+    diffuse_node.location = (-200, -100)
+
+    if color:
+        diffuse_node.inputs['Color'].default_value = color  # RGBA
+    else:
+        diffuse_node.inputs['Color'].default_value = [0.8, 0.8, 0.8, 1]
+
+    links.new(transparent_node.outputs[0], mix_shader.inputs[1])
+    links.new(diffuse_node.outputs[0], mix_shader.inputs[2])
+    links.new(mix_shader.outputs[0], output_node.inputs[0])
+
+    mix_shader.inputs[0].default_value = transparency
+
+def set_all_ifcspaces_translucent(model):
+    """Set all IfcSpace entities to translucent."""
+    for entity in model.by_type("IfcSpace"):
+        obj = tool.Ifc.get_object(entity)
+        if obj:
+            set_translucent_material(obj)
+
+def select_by_guid(model, topic):
+    global previous_guids
+    current_guids = sensor_ifc_link[topic]
+
+    # Revert the color of previously selected entities
+    for guid in previous_guids:
+        obj = tool.Ifc.get_object(model.by_guid(guid))
+        if obj:
+            set_translucent_material(obj)
+
+    # Select and set color for the new GUIDs
+    bpy.ops.object.select_all(action='DESELECT')
+    for guid in current_guids:
+        obj = tool.Ifc.get_object(model.by_guid(guid))
+        if obj:
+            # Set the object as active and selected
+            bpy.context.view_layer.objects.active = obj
+            obj.select_set(True)
+            print(f"Object with GUID {guid} selected: {obj.name}")
+
+            # Change color to red with transparency
+            set_translucent_material(obj, color=[1, 0, 0, 1])
+
+    # Update previous_guids
+    previous_guids = current_guids
 
 # Function to update the selected topic and write it to a shared file
 def update_selected_topic(self, context):
