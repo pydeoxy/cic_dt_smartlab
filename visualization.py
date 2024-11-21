@@ -35,7 +35,8 @@ def visualize_real_time_data(db_path, json_path):
 
         # Initialize plot
         plt.ion()  # Enable interactive mode
-        fig, ax = plt.subplots(figsize=(6, 4))
+        fig, ax = plt.subplots(figsize=(5, 3))
+        fig.canvas.manager.set_window_title("Real-Time Sensor Data")
 
         # Connect the close event and key press event
         fig.canvas.mpl_connect('close_event', on_close)
@@ -63,7 +64,7 @@ def visualize_real_time_data(db_path, json_path):
 
                 # Plot data
                 ax.plot(timestamps_filtered, values_filtered, marker='o', linestyle='-', color='b')
-                ax.set_title(f"Real-Time Sensor Data for Sensor ID: {sensor_id_to_plot}")
+                ax.set_title(f"Sensor ID: {sensor_id_to_plot}")
                 ax.set_xlabel('Timestamp')
                 ax.set_ylabel('Sensor Value')
                 ax.tick_params(axis='x', rotation=45)
@@ -87,7 +88,8 @@ def visualize_real_time_data(db_path, json_path):
 # Function to visualize historical data from the database without real-time updates
 def visualize_history_data(db_path, topic):
     # Initialize plot
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(5, 3))
+    fig.canvas.manager.set_window_title("Historical Sensor Data")
 
     # Fetch all historical data from the database
     sensor_data = fetch_sensor_data(db_path, topic)
@@ -105,7 +107,7 @@ def visualize_history_data(db_path, topic):
 
         # Plot data
         ax.plot(timestamps_filtered, values_filtered, marker='o', linestyle='-', color='b')
-        ax.set_title(f"Historical Sensor Data for Sensor ID: {sensor_id_to_plot}")
+        ax.set_title(f"Sensor ID: {sensor_id_to_plot}")
         ax.set_xlabel('Timestamp')
         ax.set_ylabel('Sensor Value')
         ax.tick_params(axis='x', rotation=45)

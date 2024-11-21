@@ -10,14 +10,13 @@ from bonsai.bim.ifc import IfcStore
 import bonsai.tool as tool
 
 """
-Run the following lines in Python Console in Blender before running the script:
+Run your own sys.path lines in Python Console in Blender before running this script.
 (Replace the folder locations with your own Python folders and local Git repository)
 
 import sys
-#sys.path
-sys.path.append('C:\\Users\\yanpe\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\Scripts')
-sys.path.append('C:\\Users\\yanpe\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages')
-sys.path.append('C:\\Users\\yanpe\\Documents\\projects\\cic_dt_smartlab')
+sys.path.append('<path_to_your_own_python_Scripts>')
+sys.path.append('<path_to_your_own_python_site-packages>')
+sys.path.append('C<path_to_your_local_cic_dt_smartlab_repository>')
 
 """
 

@@ -1,5 +1,5 @@
 import sqlite3
-import json  # In case sensor_data is a JSON string
+import csv
 
 # Function to connect to the SQLite database
 def connect_db(db_path):
@@ -71,17 +71,39 @@ def fetch_sensor_data(db_path, topic):
 
     return cursor.fetchall()
 
+# Function to fetch data from all topics and save as a CSV file
+def save_data_csv(db_path, csv_path):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Query to get all unique sensor IDs (topics)
+    cursor.execute("SELECT DISTINCT sensor_id FROM sensor_data")
+    topics = cursor.fetchall()
+
+    # Prepare to write to CSV
+    with open(csv_path, mode='w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+        # Write the header
+        csv_writer.writerow(["sensor_id", "timestamp", "value"])
+
+        # Fetch data for each topic and write to CSV
+        for topic in topics:
+            topic_id = topic[0]  # Extract the sensor ID
+            data = fetch_sensor_data(db_path, topic_id)
+            csv_writer.writerows(data)  # Append the data for the topic
+
+    conn.close()
+    print(f"Data from all topics has been saved to {csv_path}")
 
 if __name__ == '__main__':  
     from dt_config import CONFIG
     from pprint import pprint
-    topic = 'KNX/13/0/0<Livingroom.Sensors.CO2-ppm>'
-    history_sensor_data = fetch_sensor_data(CONFIG['history_db_path'],topic)
-    realtime_sensor_data = fetch_sensor_data(CONFIG['realtime_db_path'],topic)
-    print('History Sensor Data')
-    pprint(history_sensor_data)
-    print('Realtime Sensor Data')
-    pprint(realtime_sensor_data)
+    #topic = CONFIG['mqtt_topics'][3]  # 'M-bus/Cold water/Flow Total'  
+    #realtime_sensor_data = fetch_sensor_data(CONFIG['realtime_db_path'],topic)    
+    #pprint(realtime_sensor_data)
+    csv_history_path = './sensor_data_history.csv'
+    history_data_path =  CONFIG['history_db_path']
+    save_data_csv(history_data_path, csv_history_path)
     
 
 

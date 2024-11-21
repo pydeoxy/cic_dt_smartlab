@@ -34,10 +34,10 @@ def download_ifc_file(file_id,ifc_file_path):
         if user_response:
             # Download the file and overwrite the existing one
             gdown.download(url, ifc_file_path, quiet=False)
-            print("File downloaded and replaced successfully.")
+            print("File downloaded and replaced successfully.")            
         else:
             print("Using the existing local IFC file.")
-            print(f"Last modified time: {readable_time}")
+        print(f"Last modified time: {readable_time}")
     else:
         # Download the file if it doesn't exist
         gdown.download(url, ifc_file_path, quiet=False)
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     ifc_file = CONFIG['ifc_file']
     download_ifc_file(file_id,ifc_file)  
     model = parse_ifc_file(ifc_file)
-    spaces = model.by_type('IfcSpace')
-    print(len(spaces))
-    for space in spaces:
-        print(space.GlobalId, space.Name)
+    #spaces = model.by_type('IfcSpace')
+    #print(len(spaces))
+    #for space in spaces:
+    #    print(space.GlobalId, space.Name)
