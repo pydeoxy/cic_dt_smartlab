@@ -46,9 +46,9 @@ To ensure modularity, scalability, and maintainability, the project is organized
    ├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.   
    ├── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).
    │ 
-
-
-   └──
+   ├── smartlab_config.json       # Private file to store configuration settings of MQTT broker and shared IFC file.
+   ├── smartLab.ifc               # Private file to store local IFC file. 
+   └── blender_console_import.txt # Private file to store command lines running in Blender Console.
   ```
 
 
@@ -70,7 +70,8 @@ To ensure modularity, scalability, and maintainability, the project is organized
   ```
   pip install -r requirements.txt  
   ```
-3. Configure `dt_config.py` with your MQTT broker, database, and Blender paths.
+3. Configure `smartlab_config.json` with your MQTT broker, and file id of shared IFC on Goolge Drive.
+   Configure `topic_ifc_link.json` with your MQTT topics and their corresponding GUIDs in the IFC file.
 
 ### **Running the Project**
 
@@ -86,6 +87,7 @@ To ensure modularity, scalability, and maintainability, the project is organized
   sys.path.append('<you_path_to_local_repository>')  
   ```
   Run blender_visualization.py in Scripting.
+
 3. Choose the MQTT topic from generated drop-down menu to be visualized.
 
 4. Other functions:
@@ -94,6 +96,12 @@ To ensure modularity, scalability, and maintainability, the project is organized
   python ifc_parser.py  
   ```
   Press 'Yes' in the pop up window to download and update the IFC file.
+
+* Download historical sensor data to a local csv file:
+  ```
+  python database.py  
+  ```
+  It will fetch all history data from `sensor_data_history.db` and save it as a csv file.
 
 ## **Details**
 
