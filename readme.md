@@ -39,15 +39,15 @@ To ensure modularity, scalability, and maintainability, the project is organized
    ├── mqtt_client.py             # Manages MQTT connection, subscriptions, and message handling.  
    ├── database.py                # Handles database connections, schema definition, and CRUD operations.  
    ├── visualization.py           # Visualizes sensor data.`  
-   ├── blender_visualization.py   # Visualizes sensors and building model in Blender.        
-   ├── shared_topic.json          # Store the same topic of sensor data visualized in Blender and matplotlib.  
-   ├── topic_ifc_link.json        # Store MQTT topics and their corrensponding GUIDs in the IFC model.     
+   ├── blender_visualization.py   # Visualizes sensors and building model in Blender.    
    ├── sensor_data_history.db     # Store the historical sensor data received from the MQTT brocker.   
    ├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.   
    ├── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).
    │ 
    ├── smartlab_config.json       # Private file to store configuration settings of MQTT broker and shared IFC file.
+   ├── shared_topic.json          # Private file to store the same topic of sensor data visualized in Blender and matplotlib.
    ├── smartLab.ifc               # Private file to store local IFC file. 
+   ├── topic_ifc_link.json        # Private file to store MQTT topics and their corrensponding GUIDs in the IFC model.  
    └── blender_console_import.txt # Private file to store command lines running in Blender Console.
   ```
 
