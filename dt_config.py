@@ -11,6 +11,7 @@ local_repository = os.path.dirname(os.path.abspath(__file__))
 
 CONFIG["TOPIC_FILE_PATH"]= f"{local_repository}/shared_topic.json"
 CONFIG["ifc_file"] = f"{local_repository}/smartLab.ifc"
+#CONFIG["mqtt_excel"] = f"{local_repository}/Smartlab_MQTT_Topics.xlsx"
 local_config = f"{local_repository}/smartlab_config.json"
 
 with open(local_config, "r") as f:
@@ -32,4 +33,4 @@ CONFIG['mqtt_topics'] = mqtt_topics
 
 if __name__ == "__main__":
     from pprint import pprint
-    pprint(mqtt_topics)
+    pprint(CONFIG)

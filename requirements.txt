@@ -2,3 +2,5 @@ ifcopenshell
 paho-mqtt
 gdown
 matplotlib
+pandas
+openpyxl

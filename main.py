@@ -6,7 +6,6 @@ from mqtt_client import setup_mqtt
 from database import connect_db, create_sensor_table, clear_old_data, save_sensor_data, save_to_history, fetch_sensor_data
 from visualization import visualize_real_time_data
 from dt_config import CONFIG  
-from ifc_parser import download_ifc_file
 
 # Path for the shared file (you might set a specific directory here)
 TOPIC_FILE_PATH = CONFIG['TOPIC_FILE_PATH'] # Update to a specific path accessible by both programs
