@@ -17,9 +17,9 @@ stop_monitoring = False
 visual_topic_lock = threading.Lock()  # Lock for thread safety
 visual_topic_updated_event = threading.Event()  # Event to signal topic updates
 
-def read_visual_topic():
-    """Reads the selected topic from the shared file, if it has changed."""
-    global last_mod_time, visual_topic
+def read_visual_topics():
+    """Reads the selected topics from the shared file, if it has changed."""
+    global last_mod_time, visual_topics
 
     try:
         # Get the current modification time of the file
@@ -33,10 +33,18 @@ def read_visual_topic():
                 # Open and read the file content
                 with open(TOPIC_FILE_PATH, "r") as f:
                     data = json.load(f)
-                    visual_topic = data.get("visual_topic")  # Update global visual_topic
-                    print(f"Topic updated to: {visual_topic}")  # Logging
-            # Return the updated visual_topic
-            return visual_topic
+                    visual_topics = data.get("visual_topics")  # Update global visual_topics
+                    print(f"Topics updated to: {visual_topics}")  # Logging
+            # Return the updated visual_topics
+            return visual_topics
+
+    except FileNotFoundError:
+        print("Error: Topic file not found.")
+        return []  # Return empty list if the file doesn't exist
+    except json.JSONDecodeError:
+        print("Error: JSON decoding issue in the topic file.")
+        return []  # Return empty list if JSON format is invalid
+
 
     except FileNotFoundError:
         print("Error: Topic file not found.")

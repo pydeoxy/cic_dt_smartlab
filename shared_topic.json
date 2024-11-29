@@ -1,1 +1,7 @@
-{"visual_topic": "KNX/14/0/0<Bedroom.Sensors.CO2-ppm>"}
+{
+    "visual_topics": [
+      "KNX/15/0/0<Bathroom.Sensors.CO2-ppm>",
+      "KNX/13/0/0<Livingroom.Sensors.CO2-ppm>",
+      "KNX/14/0/0<Bedroom.Sensors.CO2-ppm>"
+    ]
+  }
