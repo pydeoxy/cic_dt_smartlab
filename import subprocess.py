@@ -15,7 +15,8 @@ from dt_config import CONFIG
 matplotlib.use('Agg')
 
 # Constants for thresholds
-OCCUPANCY_THRESHOLD = 429.5
+OCCUPANCY_THRESHOLD = 429.5  # CO2 occupancy threshold
+SAFETY_THRESHOLD = 1000      # CO2 safety threshold
 TEMPERATURE_LOW = 18
 TEMPERATURE_HIGH = 24
 HUMIDITY_LOW = 30
@@ -57,6 +58,8 @@ def generate_plot(room_type):
     }.get(room_type, [])
 
     fig, axs = plt.subplots(len(room_topics), 1, figsize=(10, 12))
+    alerts = []  # Store alerts to be triggered
+
     for i, topic in enumerate(room_topics):
         ax = axs[i]
         sensor_data = fetch_sensor_data(CONFIG['realtime_db_path'], topic)
@@ -68,10 +71,22 @@ def generate_plot(room_type):
             latest_value = values[-1] if values else None
             if topic.endswith("CO2-ppm>"):
                 status, color = ("Occupied", 'lightcoral') if latest_value and latest_value > OCCUPANCY_THRESHOLD else ("Unoccupied", 'lightgreen')
+                if latest_value and latest_value > OCCUPANCY_THRESHOLD:
+                    alerts.append(f"CO2 level in {room_type} is high: {latest_value} ppm (Exceeds occupancy threshold).")
+                if latest_value and latest_value > SAFETY_THRESHOLD:
+                    alerts.append(f"CO2 level in {room_type} is extremely high: {latest_value} ppm (Exceeds safety threshold).")
             elif topic.endswith("Air-temperature-C>"):
                 status, color = determine_status(latest_value, TEMPERATURE_LOW, TEMPERATURE_HIGH)
+                if latest_value and latest_value < TEMPERATURE_LOW:
+                    alerts.append(f"Temperature in {room_type} is low: {latest_value} °C (Below minimum threshold).")
+                if latest_value and latest_value > TEMPERATURE_HIGH:
+                    alerts.append(f"Temperature in {room_type} is high: {latest_value} °C (Above maximum threshold).")
             elif topic.endswith("Rh-percent>"):
                 status, color = determine_status(latest_value, HUMIDITY_LOW, HUMIDITY_HIGH)
+                if latest_value and latest_value < HUMIDITY_LOW:
+                    alerts.append(f"Humidity in {room_type} is low: {latest_value} % (Below minimum threshold).")
+                if latest_value and latest_value > HUMIDITY_HIGH:
+                    alerts.append(f"Humidity in {room_type} is high: {latest_value} % (Above maximum threshold).")
             else:
                 status, color = "Unknown", "white"
 
@@ -98,7 +113,8 @@ def generate_plot(room_type):
     FigureCanvas(fig).print_png(buf)
     img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
     buf.close()
-    return img_str
+
+    return img_str, alerts
 
 # Layout
 app.layout = html.Div(
@@ -116,6 +132,18 @@ app.layout = html.Div(
         ),
         dbc.Container(id='graph-container', style={"background-color": "#fff", "padding": "20px", "border-radius": "8px",
                                                    "box-shadow": "0 4px 8px rgba(0, 0, 0, 0.1)"}),
+        # Modal for alerts
+        dbc.Modal(
+            [
+                dbc.ModalHeader("Alert", style={"background-color": "lightcoral"}),
+                dbc.ModalBody(id="modal-body"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close", className="ml-auto", n_clicks=0)
+                ),
+            ],
+            id="alert-modal",
+            is_open=False,
+        ),
         dcc.Interval(
             id='graph-update-interval',
             interval=10000,  # Update every 10 seconds
@@ -125,17 +153,29 @@ app.layout = html.Div(
     style={"font-family": "Century Gothic", "background-color": "#f8f9fa", "padding": "20px"}
 )
 
-# Callback for updating graphs
+# Callback for updating graphs and displaying alerts in a modal dialog
 @app.callback(
-    Output('graph-container', 'children'),
+    [Output('graph-container', 'children'),
+     Output('modal-body', 'children'),
+     Output('alert-modal', 'is_open')],
     [Input('room-dropdown', 'value'),
-     Input('graph-update-interval', 'n_intervals')]  # Trigger update based on interval
+     Input('graph-update-interval', 'n_intervals'),
+     Input('close', 'n_clicks')]  # Close button in modal
 )
-def update_graph(room, n_intervals):
-    img_str = generate_plot(room)
+def update_graph_and_alerts(room, n_intervals, close_clicks):
+    img_str, alerts = generate_plot(room)
+    
+    # Display the alerts as a list of alert messages in the modal
+    alert_text = html.Div([html.P(alert) for alert in alerts])
+
+    # Open the modal if there are alerts, otherwise close it
+    modal_is_open = bool(alerts) and close_clicks == 0
+
     return dbc.Row(
-        dbc.Col(html.Img(src=f"data:image/png;base64,{img_str}", style={'width': '100%'}))
-    )
+               dbc.Col(html.Img(src=f"data:image/png;base64,{img_str}", style={'width': '100%'}))
+           ), alert_text, modal_is_open  # Return alerts in the modal dialog
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
