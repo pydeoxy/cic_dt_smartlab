@@ -31,6 +31,13 @@ sensor_ifc_link = load_link()
 mqtt_topics = list(sensor_ifc_link.keys())
 CONFIG['mqtt_topics'] = mqtt_topics 
 
+# Constants for thresholds
+THRESHOLDS = {
+    'CO2': [429.5, 1000],  # CO2 above low value implies occupied, high value for safety threshold    
+    'TEMPERATURE': [18, 24],  # Low and high value for temperature    
+    'HUMIDITY': [30, 60]  # Low and high value for humidity
+}
+
 if __name__ == "__main__":
     from pprint import pprint
     pprint(CONFIG)

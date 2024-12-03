@@ -27,34 +27,67 @@ MQTT_TOPICS = CONFIG['mqtt_topics']
 TOPIC_FILE_PATH = CONFIG['TOPIC_FILE_PATH'] 
 ifc_file = CONFIG['ifc_file']
 
-# Global variable to track the selected topic
-selected_topic = MQTT_TOPICS[0]  # Default to the first topic
+# Group MQTT topics
+group_keys = ['Livingroom',
+              'Bedroom',
+              'Bathroom',
+              'Air-temperature',
+              'Floor-temp',
+              'CO2-ppm',
+              'Rh',
+              'M-bus',
+              'KNX']
+
+GROUPS_AND_TOPICS = {}
+for k in group_keys:
+    GROUPS_AND_TOPICS[k] = list(filter(lambda s: k.lower() in s.lower(), MQTT_TOPICS))
+
+# Global variable to track the selected topics
+selected_topics = GROUPS_AND_TOPICS['Livingroom']  # Default to the Livingroom topics
 # Load the IFC model opened in Blender Bonsai
 model = IfcStore.get_file()    
-
-# Function to handle incoming MQTT messages
-'''def on_message(client, userdata, msg):
-    if msg.topic == selected_topic:
-        try:
-            sensor_data = json.loads(msg.payload.decode('utf-8'))
-            value = float(sensor_data["value"])
-
-            # Map value to color
-            color = [min(value / 100, 1), 0.2, 1 - min(value / 100, 1), 1]  # Example RGB mapping
-            print(f"Changing color to: {color} for value: {value}")
-
-            # Change color of an object in Blender (adjust 'Cube' to your object name)
-            bpy.data.objects['Cube'].active_material.diffuse_color = color
-        except Exception as e:
-            print(f"Failed to update color: {e}")'''
 
 # Function to set up MQTT and subscribe to the selected topic
 def setup_blender_mqtt():
     client = mqtt.Client()
     #client.on_message = on_message
     client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    client.subscribe(selected_topic)
+    client.subscribe(selected_topics)
     client.loop_start()
+
+# Function to dynamically generate topic items based on the selected group
+def get_dynamic_topic_items(self, context):
+    selected_group = context.scene.selected_mqtt_group
+    group_topics = GROUPS_AND_TOPICS.get(selected_group, [])
+    if selected_group not in ['M-bus', 'KNX']:
+        group_topics = ["all"] + group_topics  # Add 'all' option for specific groups
+    return [(topic, topic, "") for topic in group_topics]
+
+# Update function for the group selection
+def update_selected_group(self, context):
+    # Trigger a topic list update by reassigning the property
+    context.scene.selected_mqtt_topic = context.scene.selected_mqtt_topic
+
+# Function to update the selected topic and write it to a shared file
+def update_selected_topics(self, context):
+    global selected_topics
+    selected_group = context.scene.selected_mqtt_group
+    selected_topic = context.scene.selected_mqtt_topic
+    
+    if selected_topic == "all":
+        selected_topics = GROUPS_AND_TOPICS.get(selected_group, [])
+    else:
+        selected_topics = [selected_topic]
+
+    print(f"Selected topics updated to: {selected_topics}")
+
+    # Select the IfcSpace entities by the selected_topic
+    for topic in selected_topics:
+        select_by_guid(model, topic)
+
+    # Write the selected topic to the shared file
+    with open(TOPIC_FILE_PATH, "w") as f:
+        json.dump({"visual_topics": selected_topics}, f)
 
 # Operator to start the Blender visualization (runs in a background thread)
 class StartBlenderVisualizationOperator(bpy.types.Operator):
@@ -90,10 +123,15 @@ class TopicSelectionPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        row = layout.row()
-        row.prop(context.scene, "selected_mqtt_topic", text="MQTT Topic")
-        row = layout.row()
-        row.operator("wm.start_blender_visualization")
+
+        # Dropdown for groups
+        layout.prop(context.scene, "selected_mqtt_group", text="Group")
+
+        # Dropdown for topics
+        layout.prop(context.scene, "selected_mqtt_topic", text="Topic")
+
+        # Button to start visualization
+        layout.operator("wm.start_blender_visualization")
 
 # Add a global variable to track previously selected GUIDs
 previous_guids = []
@@ -171,36 +209,33 @@ def select_by_guid(model, topic):
     # Update previous_guids
     previous_guids = current_guids
 
-# Function to update the selected topic and write it to a shared file
-def update_selected_topic(self, context):
-    global selected_topic
-    selected_topic = context.scene.selected_mqtt_topic
-    print(f"Selected topic updated to: {selected_topic}")
-
-    # Select the IfcSpace entities by the selected_topic
-    select_by_guid(model, selected_topic)
-
-    # Write the selected topic to the shared file
-    with open(TOPIC_FILE_PATH, "w") as f:
-        json.dump({"visual_topic": selected_topic}, f)
-
 # Function to get the current topic for any Blender-specific functionality
 def get_selected_topic():
-    return selected_topic
+    return selected_topics
 
 # Register properties and classes
 def register():
+    # Properties for group and topics
+    bpy.types.Scene.selected_mqtt_group = bpy.props.EnumProperty(
+        name="MQTT Groups",
+        description="Select the MQTT group for topics",
+        items=[(group, group, "") for group in GROUPS_AND_TOPICS.keys()],
+        update=update_selected_group,  # Update topics when the group changes
+    )
+
     bpy.types.Scene.selected_mqtt_topic = bpy.props.EnumProperty(
         name="MQTT Topics",
         description="Select the MQTT topic for visualization",
-        items=[(topic, topic, "") for topic in MQTT_TOPICS],
-        update=update_selected_topic,
+        items=get_dynamic_topic_items,  # Dynamically generate items based on the selected group
+        update=update_selected_topics,  # Trigger topic selection logic
     )
+
     bpy.utils.register_class(StartBlenderVisualizationOperator)
     bpy.utils.register_class(TopicSelectionPanel)
 
 def unregister():
     del bpy.types.Scene.selected_mqtt_topic
+    del bpy.types.Scene.selected_mqtt_group
     bpy.utils.unregister_class(StartBlenderVisualizationOperator)
     bpy.utils.unregister_class(TopicSelectionPanel)
 
