@@ -8,6 +8,7 @@ from io import BytesIO
 import base64
 import datetime
 import dash_bootstrap_components as dbc
+import webbrowser  # Import webbrowser module to open the browser automatically
 from database import fetch_sensor_data
 from dt_config import CONFIG
 
@@ -176,6 +177,6 @@ def update_graph_and_alerts(room, n_intervals, close_clicks):
            ), alert_text, modal_is_open  # Return alerts in the modal dialog
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
-
-
+    # Open the browser automatically
+    webbrowser.open("http://127.0.0.1:8050/")  # Open the Dash app in the default browser
+    app.run_server(debug=True, use_reloader=False)  # Disable the reloader to prevent opening multiple tabs    
