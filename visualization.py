@@ -190,5 +190,6 @@ def visualize_history_data(db_path, topic):
 
 if __name__ == '__main__':    
     from main import TOPIC_FILE_PATH
+    #topic = 'KNX/15/0/0<Bathroom.Sensors.CO2-ppm>'
     #visualize_history_data(CONFIG['history_db_path'],topic)
     visualize_real_time_data(CONFIG['realtime_db_path'], TOPIC_FILE_PATH)

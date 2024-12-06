@@ -1,10 +1,4 @@
-smartLab.ifc
-smartlab_config.json
-blender_console_import.txt
-sensor_data_history.csv
-sensor_data_realtime.csv
+local_files/
 shared_topic.json
-topic_ifc_link.json
-Smartlab_MQTT_Topics.xlsx
 topic_ifc_link.py
 test.py

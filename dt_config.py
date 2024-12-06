@@ -10,9 +10,9 @@ CONFIG = {
 local_repository = os.path.dirname(os.path.abspath(__file__))
 
 CONFIG["TOPIC_FILE_PATH"]= f"{local_repository}/shared_topic.json"
-CONFIG["ifc_file"] = f"{local_repository}/smartLab.ifc"
-#CONFIG["mqtt_excel"] = f"{local_repository}/Smartlab_MQTT_Topics.xlsx"
-local_config = f"{local_repository}/smartlab_config.json"
+CONFIG["ifc_file"] = f"{local_repository}/local_files/smartLab.ifc"
+CONFIG["mqtt_excel"] = f"{local_repository}/local_files/Smartlab_MQTT_Topics.xlsx"
+local_config = f"{local_repository}/local_files/smartlab_config.json"
 
 with open(local_config, "r") as f:
     data = json.load(f)
@@ -20,7 +20,7 @@ with open(local_config, "r") as f:
 
 def load_link():
     local_repository = os.path.dirname(os.path.abspath(__file__))
-    topic_ifc_link = f"{local_repository}/topic_ifc_link.json"
+    topic_ifc_link = f"{local_repository}/local_files/topic_ifc_link.json"
 
     with open(topic_ifc_link, "r") as f:
         link = json.load(f)
