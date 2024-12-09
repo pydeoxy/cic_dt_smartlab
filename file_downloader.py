@@ -44,5 +44,5 @@ def download_shared_file(file_id,file_path):
 if __name__ == '__main__':  
     # Download or update IFC file
     download_shared_file(CONFIG['ifc_file_id'], CONFIG['ifc_file'])  
-    # Download or update Excel file
-    download_shared_file(CONFIG['mqtt_excel_id'], CONFIG["mqtt_excel"])
+    # Download or update CSV file
+    download_shared_file(CONFIG['mqtt_csv_id'], CONFIG["mqtt_csv"])

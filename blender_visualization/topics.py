@@ -1,13 +1,15 @@
 import bpy
 import os
+import sys
 import json
 import threading
 import time
 import paho.mqtt.client as mqtt
-from dt_config import CONFIG, sensor_ifc_link
+from dt_config import CONFIG, sensor_ifc_link, local_repository
 import ifcopenshell
 from bonsai.bim.ifc import IfcStore
 import bonsai.tool as tool
+import subprocess
 
 """
 Run your own sys.path lines in Python Console in Blender before running this script.
@@ -90,29 +92,30 @@ def update_selected_topics(self, context):
         json.dump({"visual_topics": selected_topics}, f)
 
 # Operator to start the Blender visualization (runs in a background thread)
-class StartBlenderVisualizationOperator(bpy.types.Operator):
-    bl_idname = "wm.start_blender_visualization"
-    bl_label = "Start Blender Visualization"
-    _timer = None
-    client = None
-
+class StartDataVisualizationOperator(bpy.types.Operator):
+    bl_idname = "wm.start_data_visualization"
+    bl_label = "Start Data Visualization"
+    
     def execute(self, context):
-        # Set up MQTT in a background thread
-        threading.Thread(target=setup_blender_mqtt, daemon=True).start()
-        self._timer = context.window_manager.event_timer_add(1.0, window=context.window)
-        context.window_manager.modal_handler_add(self)
-        return {'RUNNING_MODAL'}
+        try:
+            # Define the command to run the script in the new terminal
+            # For Windows, using PowerShell or CMD
+            if sys.platform == 'win32':
+                # Open a new PowerShell or CMD window and run the script
+                cmd = ['powershell', '-NoExit', '-Command', 'python main.py']
+                subprocess.Popen(cmd, cwd=local_repository, creationflags=subprocess.CREATE_NEW_CONSOLE)
 
-    def modal(self, context, event):
-        if event.type == 'TIMER':
-            # Check for real-time updates
-            pass
-        return {'PASS_THROUGH'}
+            # For macOS or Linux, you could use xterm or gnome-terminal, etc.
+            else:
+                cmd = ['gnome-terminal', '--', 'python', 'main.py']
+                subprocess.Popen(cmd, cwd=cwd)
 
-    def cancel(self, context):
-        if self._timer:
-            context.window_manager.event_timer_remove(self._timer)
+            self.report({'INFO'}, "Script executed successfully in a new terminal.")
+        except Exception as e:
+            self.report({'ERROR'}, f"Error executing script: {e}")
 
+        return {'FINISHED'}
+    
 # Custom panel for topic selection in the 3D View
 class TopicSelectionPanel(bpy.types.Panel):
     bl_label = "MQTT Topic Selection"
@@ -131,7 +134,7 @@ class TopicSelectionPanel(bpy.types.Panel):
         layout.prop(context.scene, "selected_mqtt_topic", text="Topic")
 
         # Button to start visualization
-        layout.operator("wm.start_blender_visualization")
+        layout.operator("wm.start_data_visualization")
 
 # Add a global variable to track previously selected GUIDs
 previous_guids = []
@@ -230,13 +233,13 @@ def register():
         update=update_selected_topics,  # Trigger topic selection logic
     )
 
-    bpy.utils.register_class(StartBlenderVisualizationOperator)
+    bpy.utils.register_class(StartDataVisualizationOperator)
     bpy.utils.register_class(TopicSelectionPanel)
 
 def unregister():
     del bpy.types.Scene.selected_mqtt_topic
     del bpy.types.Scene.selected_mqtt_group
-    bpy.utils.unregister_class(StartBlenderVisualizationOperator)
+    bpy.utils.unregister_class(StartDataVisualizationOperator)
     bpy.utils.unregister_class(TopicSelectionPanel)
 
 if __name__ == "__main__":
