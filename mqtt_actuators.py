@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 from dt_config import CONFIG 
 import paho.mqtt.client as mqtt
 
@@ -24,9 +25,7 @@ def link_data_from_csv(csv_file):
         # Fall back to a different encoding if utf-8 fails
         df = pd.read_csv(csv_file, sep=';',header=0, encoding='ISO-8859-1', on_bad_lines='skip')    
     # Drop empty rows (no value in column 'IFC Target GUID')
-    df.dropna(subset=['IFC Device GUID'], inplace=True)
-    # Drop rows with the value 'not yet modeled' in 'IFC Target GUID'
-    #df = df[df['IFC Target GUID'] != 'not yet modeled']    
+    df.dropna(subset=['IFC Device GUID'], inplace=True)     
     # Drop unnamed columns
     df = df.loc[:, ~df.columns.astype(str).str.contains('^Unnamed')]    
     # Select relevant columns and convert to a dictionary
@@ -38,22 +37,20 @@ def actuator_control(topic, payload):
     # Create an MQTT client instance
     client = mqtt.Client()
     # Connect to the broker
-    client.connect(CONFIG['mqtt_broker'], CONFIG['mqtt_port'], 60)  # 60 is the keep-alive time in seconds
+    client.connect(CONFIG['mqtt_broker'], CONFIG['mqtt_port'], 60)  
     # Publish the value to the topic
     client.publish(topic, payload)
     # Disconnect the client
     client.disconnect()
     print(f"Value '{payload}' published to topic '{topic}'.")
 
-# Global variable to track message received
-message_received = False
 def actuator_payload(topic):   
     # Callback for when a message is received
     def on_message(client, userdata, msg):
-        global message_received, current_payload
+        #global message_received
+        global current_payload
         current_payload = msg.payload.decode()
-        print(f"Received message: {current_payload} on topic: {msg.topic}")
-        message_received = True
+        print(f"Received message: {current_payload} on topic: {msg.topic}")        
         # Stop the MQTT client loop after receiving one message
         client.disconnect()        
 
@@ -68,14 +65,11 @@ def actuator_payload(topic):
     # Start the loop in a separate thread
     print(f"Waiting for a message on topic: {topic}")
     client.loop_start()
-    # Wait until a message is received
-    while not message_received:
-        pass  # Keeps the script alive until a message is received
-    # Stop the loop explicitly (optional, since disconnect already stops it)
+    # Wait 1s to receive a message  
+    time.sleep(1)
     client.loop_stop()
     print("MQTT loop stopped. Exiting.")        
     return current_payload
-
 
 actuator_ifc_link = link_data_from_csv(CONFIG["mqtt_csv"])
 
