@@ -2,12 +2,6 @@ import paho.mqtt.client as mqtt
 import json
 from datetime import datetime  # For getting the current timestamp
 
-# The callback for when the client connects to the broker
-'''def on_connect(client, userdata, flags, rc, mqtt_topic=CONFIG['mqtt_topic']):
-    print(f"Connected with result code {rc}")
-    # Subscribe to the topic (replace with your topic)
-    client.subscribe(mqtt_topic)'''
-
 # The callback for when a message is received from the broker
 def on_message(client, userdata, msg, save_callback):
     try:
