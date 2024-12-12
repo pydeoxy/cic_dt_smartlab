@@ -33,27 +33,6 @@ selected_actuators = ACTUATORS_AND_TOPICS['Living room']  # Default to the Livin
 current_payload = ""
 # Load the IFC model opened in Blender Bonsai
 model = IfcStore.get_file()    
-
-'''
-# Function to handle incoming MQTT messages
-def on_message(client, userdata, msg):
-    global current_payload
-    current_payload = msg.payload.decode()
-    print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
-
-def get_current_payload():
-    return current_payload
-
-# Function to set up MQTT and subscribe to the selected topic
-def setup_blender_mqtt():
-    print("Setting up MQTT...")
-    client = mqtt.Client()
-    client.on_message = on_message
-    client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    client.subscribe(selected_actuators)
-    client.loop_start()
-    print("MQTT setup complete.")    
-'''
     
 # Function to dynamically generate topic items based on the selected group
 def get_dynamic_topic_items(self, context):

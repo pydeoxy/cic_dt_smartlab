@@ -5,44 +5,17 @@ import json
 import threading
 import time
 import paho.mqtt.client as mqtt
-from dt_config import CONFIG, sensor_ifc_link, local_repository
+from dt_config import CONFIG, GROUPS_AND_TOPICS,sensor_ifc_link, local_repository
 import ifcopenshell
 from bonsai.bim.ifc import IfcStore
 import bonsai.tool as tool
 import subprocess
 
-"""
-Run your own sys.path lines in Python Console in Blender before running this script.
-(Replace the folder locations with your own Python folders and local Git repository)
-
-import sys
-sys.path.append('<path_to_your_own_python_Scripts>')
-sys.path.append('<path_to_your_own_python_site-packages>')
-sys.path.append('C<path_to_your_local_cic_dt_smartlab_repository>')
-
-"""
-
 # MQTT settings from CONFIG
 MQTT_BROKER = CONFIG['mqtt_broker']
 MQTT_PORT = CONFIG['mqtt_port']
-MQTT_TOPICS = CONFIG['mqtt_topics']
 TOPIC_FILE_PATH = CONFIG['TOPIC_FILE_PATH'] 
 ifc_file = CONFIG['ifc_file']
-
-# Group MQTT topics
-group_keys = ['Livingroom',
-              'Bedroom',
-              'Bathroom',
-              'Air-temperature',
-              'Floor-temp',
-              'CO2-ppm',
-              'Rh',
-              'M-bus',
-              'KNX']
-
-GROUPS_AND_TOPICS = {}
-for k in group_keys:
-    GROUPS_AND_TOPICS[k] = list(filter(lambda s: k.lower() in s.lower(), MQTT_TOPICS))
 
 # Global variable to track the selected topics
 selected_topics = GROUPS_AND_TOPICS['Livingroom']  # Default to the Livingroom topics

@@ -97,7 +97,7 @@ def save_data_csv(db_path, csv_path):
 
 if __name__ == '__main__':  
     from dt_config import CONFIG    
-    csv_history_path = './sensor_data_history.csv'
+    csv_history_path = './local_files/sensor_data_history.csv'
     history_data_path =  CONFIG['history_db_path']
     save_data_csv(history_data_path, csv_history_path)
     #csv_realtime_path = './sensor_data_realtime.csv'

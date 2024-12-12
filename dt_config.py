@@ -38,6 +38,21 @@ THRESHOLDS = {
     'HUMIDITY': [30, 60]  # Low and high value for humidity
 }
 
+# Group MQTT topics
+group_keys = ['Livingroom',
+              'Bedroom',
+              'Bathroom',
+              'Air-temperature',
+              'Floor-temp',
+              'CO2-ppm',
+              'Rh',
+              'M-bus',
+              'KNX']
+
+GROUPS_AND_TOPICS = {}
+for k in group_keys:
+    GROUPS_AND_TOPICS[k] = list(filter(lambda s: k.lower() in s.lower(), mqtt_topics))
+
 if __name__ == "__main__":
     from pprint import pprint
     pprint(CONFIG)
