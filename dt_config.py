@@ -32,25 +32,10 @@ mqtt_topics = list(sensor_ifc_link.keys())
 CONFIG['mqtt_topics'] = mqtt_topics 
 
 # Constants for thresholds
-THRESHOLDS = {
-    'CO2': [429.5, 1000],  # CO2 above low value implies occupied, high value for safety threshold    
-    'TEMPERATURE': [18, 24],  # Low and high value for temperature    
-    'HUMIDITY': [30, 60]  # Low and high value for humidity
-}
-
-# Group MQTT topics
-group_keys = ['Livingroom',
-              'Bedroom',
-              'Bathroom',
-              'Air-temperature',
-              'Floor-temp',
-              'CO2-ppm',
-              'Rh',
-              'M-bus',
-              'KNX']
+THRESHOLDS = CONFIG["thresholds"]
 
 GROUPS_AND_TOPICS = {}
-for k in group_keys:
+for k in CONFIG["group_keys"]:
     GROUPS_AND_TOPICS[k] = list(filter(lambda s: k.lower() in s.lower(), mqtt_topics))
 
 if __name__ == "__main__":

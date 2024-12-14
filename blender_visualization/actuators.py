@@ -8,20 +8,12 @@ from mqtt_actuators import actuator_ifc_link, actuator_control, actuator_payload
 from blender_visualization.topics import set_translucent_material
 
 # MQTT settings from CONFIG
-MQTT_BROKER = '192.168.1.10'
+MQTT_BROKER = CONFIG["mqtt_broker"]
 MQTT_PORT = CONFIG['mqtt_port']
 ACTUATORS_TOPICS = list(actuator_ifc_link.keys())
 
 # Group MQTT topics
-actuator_keys = ['Living room',
-              'Hallway',
-              'Kitchen',
-              'Bedroom',
-              'Bathroom',              
-              '-Light',
-              'DimLight',
-              'Curtain',
-              'Facade.Lights']
+actuator_keys = CONFIG["actuator_keys"]
 
 ACTUATORS_AND_TOPICS = {}
 for k in actuator_keys:
