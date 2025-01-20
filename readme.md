@@ -4,7 +4,7 @@
 
 The **CiC Digital Twins Project of SmartLab** is a proof-of-concept initiative designed to create a **Digital Twin** for the SmartLab environment. This project integrates real-time sensor data, efficient data management, and 3D visualization to provide a seamless representation of the building and its sensor network. It is part of the **Digital Twins in Construction** course of **Computing in Construction** program at **Metropolia**.
 
-The project demonstrates a practical workflow for building a Minimum Viable Product (MVP), leveraging modern tools like Git, Google Drive, and VS Code for efficient development.
+The project demonstrates a practical workflow for building a Minimum Viable Product (MVP) of a small digital twin project, leveraging modern tools like Git, Google Drive, and VS Code for efficient development.
 
 ## **Project Objectives**
 
@@ -35,20 +35,30 @@ To ensure modularity, scalability, and maintainability, the project is organized
    │ 
    ├── main.py                    # Main entry point for running the digital twin.  
    ├── dt_config.py               # Configuration settings for the MQTT broker, database, etc.  
-   ├── ifc_parser.py              # Parses the IFC model to extract building geometry and sensor locations.  
+   ├── file_downloader.py         # Download and update the IFC model and excel file of topics/model connections.  
    ├── mqtt_client.py             # Manages MQTT connection, subscriptions, and message handling.  
    ├── database.py                # Handles database connections, schema definition, and CRUD operations.  
-   ├── visualization.py           # Visualizes sensor data.`  
-   ├── blender_visualization.py   # Visualizes sensors and building model in Blender.    
+   ├── visualization.py           # Visualizes sensor data with pop-up charts.  
+   ├── blender_visualization      # Files related to visualization in Blender.    
+       │ 
+       ├── __init__.py            # List of python files in this folder to be imported in blender_run.py
+       ├── actuators.py           # Actuator sensors to be controlled by pushing messages.
+       ├── highlight_tools.py     # Highlight display of selected sensors or spaces related to sensor data.
+       ├── lights.py              # Facade lights. 
+       └── topics.py              # Select MQTT topics to be visualized. 
+   │
    ├── sensor_data_history.db     # Store the historical sensor data received from the MQTT brocker.   
    ├── sensor_data_realtime.db    # Store the real-time sensor data for visualization synchronously.   
    ├── requirements.txt           # List of dependencies (e.g., ifcopenshell, paho-mqtt).
-   │ 
-   ├── smartlab_config.json       # Private file to store configuration settings of MQTT broker and shared IFC file.
-   ├── shared_topic.json          # Private file to store the same topic of sensor data visualized in Blender and matplotlib.
-   ├── smartLab.ifc               # Private file to store local IFC file. 
-   ├── topic_ifc_link.json        # Private file to store MQTT topics and their corrensponding GUIDs in the IFC model.  
-   └── blender_console_import.txt # Private file to store command lines running in Blender Console.
+   ├── local_files                # Private files to store configuration locally.  
+       │ 
+       ├── blender_console_import.txt # Command lines running in Blender Console before running blender_run.py.
+       ├── smartlab_config.json       # Configuration settings of MQTT broker and shared IFC file.
+       ├── shared_topic.json          # The same topic of sensor data visualized in Blender and matplotlib.
+       ├── topic_ifc_link.json        # Selected KNX topics and their corrensponding GUIDs in the IFC model.  
+       ├── Topic_Ifc_Mapping.csv      # Full MQTT topics and their corrensponding GUIDs in the IFC model.  
+       └── smartLab.ifc               # IFC file of the project. 
+   
   ```
 
 
@@ -71,14 +81,13 @@ To ensure modularity, scalability, and maintainability, the project is organized
   pip install -r requirements.txt  
   ```
 3. Configure `smartlab_config.json` with your MQTT broker, and file id of shared IFC on Goolge Drive.
-   Configure `topic_ifc_link.json` with your MQTT topics and their corresponding GUIDs in the IFC file.
+   Configure `topic_ifc_link.json` with your selected MQTT topics and their corresponding GUIDs in the IFC file.
+   Configure `Topic_Ifc_Mapping.csv` with your MQTT topics including actuators and their corresponding GUIDs in the IFC file.
 
 ### **Running the Project**
 
-1. Start the digital twin:
-  ```
-  python main.py  
-  ```
+1. Start Blender, open the IFC model, and hide the objects which are not needed to be shown.
+
 2. Start Blender, run the following lines in the Console:
   ```
   import sys
@@ -86,22 +95,31 @@ To ensure modularity, scalability, and maintainability, the project is organized
   sys.path.append('<you_path_to_python>\\site-packages')
   sys.path.append('<you_path_to_local_repository>')  
   ```
-  Run blender_visualization.py in Scripting.
+  These lines could be saved in blender_console_import.txt.
 
-3. Choose the MQTT topic from generated drop-down menu to be visualized.
+  Run blender_run.py in Scripting.
 
-4. Other functions:
-* Download and update the IFC model:
-  ```
-  python ifc_parser.py  
-  ```
-  Press 'Yes' in the pop up window to download and update the IFC file.
+3. Switch to BIM view, check Siderbar in the View menu. The following panels are added in the siderbar:
+  - MQTT Visualizaiton
+  - Visualization tools
+  - Lights
+  - Actuator Control
 
-* Download historical sensor data to a local csv file:
+4. Choose the MQTT topic to be visualized from the drop-down menu in the MQTT Visualizaiton panel.
+  - Click the button to start visualization.
+  - Press 'Esc' key to stop the visualization.
+
+4. Choose the MQTT topic of actuators from the drop-down menu in the Actuator Control panel.
+  - Check the latest value by click the Show Current Value button.
+  - Input the new value in the Payload part and click the Publish Payload to send the value to the actuator sensor to control the related element.
+
+5. Other functions:
+
+* Download and update files:
   ```
-  python database.py  
+  python file_downloader.py  
   ```
-  It will fetch all history data from `sensor_data_history.db` and save it as a csv file.
+  Press 'Yes' in the pop up window to download and update the IFC file and csv file.
 
 ## **Details**
 
@@ -115,10 +133,13 @@ To ensure modularity, scalability, and maintainability, the project is organized
   * Historical data (`sensor_data_history.db`) for analytics and audits.
 
 ### **Visualization**
-1. **2D Visualization**: Displays sensor data trends using `visualization.py`.
+1. **2D Visualization**: Displays history or real-time sensor data trends using `visualization.py`.
 2. **3D Visualization**:
   * Renders building geometry and overlays sensor data in **Blender**.
   * Supports dynamic updates for real-time exploration.
+  * Highlight model elements by changing colors and transparency.
+  * Showing colored light of the facade lighting.
+  * Control actuator sensors by push message to MQTT client.
 
 ## **Extensibility**
 This program is designed for flexibility and future development.
