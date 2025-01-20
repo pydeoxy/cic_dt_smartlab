@@ -115,12 +115,17 @@ To ensure modularity, scalability, and maintainability, the project is organized
     - Input the new value in the Payload part and click the Publish Payload to send the value to the actuator sensor to control the related element.
 
 5. Other functions:
+    - Highlight model elements by changing colors and transparency.
+      The visualizaiton related to sensor data to be developed.
 
-* Download and update files:
-  ```
-  python file_downloader.py  
-  ```
-  Press 'Yes' in the pop up window to download and update the IFC file and csv file.
+    - Showing colored lights of the facade lighting.
+      The location of the lights to be updated according to the reality.
+
+    - Download and update files:
+    ```
+    python file_downloader.py  
+    ```
+    Press 'Yes' in the pop up window to download and update the IFC file and csv file.
 
 ## **Details**
 
