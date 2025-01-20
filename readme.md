@@ -99,19 +99,20 @@ To ensure modularity, scalability, and maintainability, the project is organized
 
   Run blender_run.py in Scripting.
 
-3. Switch to BIM view, check Siderbar in the View menu. The following panels are added in the siderbar:
-  - MQTT Visualizaiton
-  - Visualization tools
-  - Lights
-  - Actuator Control
+3. Switch to BIM view, check Siderbar in the View menu. 
+  The following panels are added in the siderbar:
+    - MQTT Visualizaiton
+    - Visualization tools
+    - Lights
+    - Actuator Control
 
 4. Choose the MQTT topic to be visualized from the drop-down menu in the MQTT Visualizaiton panel.
-  - Click the button to start visualization.
-  - Press 'Esc' key to stop the visualization.
+    - Click the button to start visualization.
+    - Press 'Esc' key to stop the visualization.
 
 4. Choose the MQTT topic of actuators from the drop-down menu in the Actuator Control panel.
-  - Check the latest value by click the Show Current Value button.
-  - Input the new value in the Payload part and click the Publish Payload to send the value to the actuator sensor to control the related element.
+    - Check the latest value by click the Show Current Value button.
+    - Input the new value in the Payload part and click the Publish Payload to send the value to the actuator sensor to control the related element.
 
 5. Other functions:
 
