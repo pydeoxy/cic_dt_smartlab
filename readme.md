@@ -73,14 +73,14 @@ To ensure modularity, scalability, and maintainability, the project is organized
 
 1. Clone the repository:
   ```
-  git clone https://github.com/yourusername/cic-digital-twins.git  
-  cd cic-digital-twins
+  git clone https://github.com/pydeoxy/cic_dt_smartlab.git  
+  cd cic_dt_smartlab
   ```
 2. Install dependencies:
   ```
   pip install -r requirements.txt  
   ```
-3. Configure `smartlab_config.json` with your MQTT broker, and file id of shared IFC on Goolge Drive.
+3. Configure `smartlab_config.json` with your MQTT broker, and IDs of shared files on Goolge Drive.
    Configure `topic_ifc_link.json` with your selected MQTT topics and their corresponding GUIDs in the IFC file.
    Configure `Topic_Ifc_Mapping.csv` with your MQTT topics including actuators and their corresponding GUIDs in the IFC file.
 
@@ -95,7 +95,7 @@ To ensure modularity, scalability, and maintainability, the project is organized
   sys.path.append('<you_path_to_python>\\site-packages')
   sys.path.append('<you_path_to_local_repository>')  
   ```
-  These lines could be saved in blender_console_import.txt.
+  These lines could be saved in your local file: blender_console_import.txt.
 
   Run blender_run.py in Scripting.
 
@@ -136,12 +136,12 @@ To ensure modularity, scalability, and maintainability, the project is organized
 ### **Data Management**
 * **SQLite3** is used to store:
   * Real-time sensor data (`sensor_data_realtime.db`) for visualization.
-  * Historical data (`sensor_data_history.db`) for analytics and audits.
+  * Historical data (`sensor_data_history.db`) for analytics and audits. (to be developed)
 
 ### **Visualization**
 1. **2D Visualization**: Displays history or real-time sensor data trends using `visualization.py`.
 2. **3D Visualization**:
-  * Renders building geometry and overlays sensor data in **Blender**.
+  * Renders building geometry and overlays sensor data in **Blender**. (to be developed)
   * Supports dynamic updates for real-time exploration.
   * Highlight model elements by changing colors and transparency.
   * Showing colored light of the facade lighting.
@@ -150,6 +150,6 @@ To ensure modularity, scalability, and maintainability, the project is organized
 ## **Extensibility**
 This program is designed for flexibility and future development.
 * **Customizable MQTT Configuration**: The MQTT broker setup and the mapping between MQTT topics and IFC entities can be tailored to suit your specific requirements.
-* **Private Database Support**: You can use your own private database files to ensure data privacy and compatibility.
+* **Private Database Support**: You can use your own private database files to ensure data privacy and compatibility. (database files to be moved to private)
 * **Scalable for Digital Twins**: The program's design allows it to be adapted for other digital twin projects, making it a versatile tool for various applications.
 * **Future Development**: Easily extend and enhance the program to meet evolving needs and requirements.
