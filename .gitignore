@@ -2,3 +2,4 @@ local_files/
 shared_topic.json
 topic_ifc_link.py
 test.py
+__pycache__/
