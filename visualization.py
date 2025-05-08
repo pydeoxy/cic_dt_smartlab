@@ -5,6 +5,8 @@ import json
 import numpy as np
 from dt_config import CONFIG, THRESHOLDS
 from matplotlib.lines import Line2D
+import matplotlib
+matplotlib.use('TkAgg')
 
 # Function to fetch selected topic from JSON file
 def get_selected_topics(json_path):
