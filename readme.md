@@ -2,9 +2,9 @@
 
 ## **Project Overview**
 
-The **CiC Digital Twins Project of SmartLab** is a proof-of-concept initiative designed to create a **Digital Twin** for the SmartLab environment. This project integrates real-time sensor data, efficient data management, and 3D visualization to provide a seamless representation of the building and its sensor network. It is part of the **Digital Twins in Construction** course of **Computing in Construction** program at **Metropolia**.
+The **CiC Digital Twins Project of SmartLab** is a proof-of-concept(POC) initiative designed to create a **Digital Twin** for the SmartLab environment. This project integrates real-time sensor data, efficient data management, and 3D visualization to provide a seamless representation of the building and its sensor network. It is part of the **Digital Twins in Construction** course of **Computing in Construction** program at **Metropolia**.
 
-The project demonstrates a practical workflow for building a Minimum Viable Product (MVP) of a small digital twin project, leveraging modern tools like Git, Google Drive, and VS Code for efficient development.
+The project demonstrates a practical workflow for building a POC of a small digital twin project, leveraging modern tools like Git, Google Drive, and VS Code for efficient development.
 
 ## **Project Objectives**
 
